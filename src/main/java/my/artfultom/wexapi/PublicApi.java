@@ -15,22 +15,25 @@ public class PublicApi {
     private static final int PUBLIC_API_DEFAULT_VERSION = 3;
 
     private int version = PUBLIC_API_DEFAULT_VERSION;
-    private GetRequest request = null;
+
+    private GetRequest request;
 
     public PublicApi(GetRequest request) {
         request.append(String.valueOf(version));
+
         this.request = request;
     }
 
     public PublicApi(GetRequest request, int version) {
-        this.version = version;
-
         request.append(String.valueOf(version));
+
         this.request = request;
+        this.version = version;
     }
 
     public Info getInfo() throws IOException {
         this.request.append("info");
+
         String responseStr = request.execute();
 
         return new ObjectMapper().readValue(responseStr, Info.class);
@@ -39,6 +42,7 @@ public class PublicApi {
     public Map<String, Ticker> getTicker(String pair) throws IOException {
         this.request.append("ticker");
         this.request.append(pair);
+
         String responseStr = request.execute();
 
         return this.parseTicker(responseStr);
@@ -47,6 +51,7 @@ public class PublicApi {
     public Map<String, Ticker> getTicker(List<String> pairs) throws IOException {
         this.request.append("ticker");
         this.request.append(String.join("-", pairs));
+
         String responseStr = request.execute();
 
         return this.parseTicker(responseStr);
@@ -71,6 +76,7 @@ public class PublicApi {
     public Map<String, Depth> getDepth(String pair) throws IOException {
         this.request.append("depth");
         this.request.append(pair);
+
         String responseStr = request.execute();
 
         return this.parseDepth(responseStr);
@@ -79,6 +85,7 @@ public class PublicApi {
     public Map<String, Depth> getDepth(List<String> pairs) throws IOException {
         this.request.append("depth");
         this.request.append(String.join("-", pairs));
+
         String responseStr = request.execute();
 
         return this.parseDepth(responseStr);
@@ -103,6 +110,7 @@ public class PublicApi {
     public Map<String, List<Trade>> getTrade(String pair) throws IOException {
         this.request.append("trades");
         this.request.append(pair);
+
         String responseStr = request.execute();
 
         return this.parseTrade(responseStr);
@@ -111,6 +119,7 @@ public class PublicApi {
     public Map<String, List<Trade>> getTrade(List<String> pairs) throws IOException {
         this.request.append("trades");
         this.request.append(String.join("-", pairs));
+
         String responseStr = request.execute();
 
         return this.parseTrade(responseStr);
