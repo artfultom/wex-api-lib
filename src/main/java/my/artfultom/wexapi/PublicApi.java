@@ -95,6 +95,12 @@ public class PublicApi {
 
     public class TickerExecutor implements Executor<Map<String, Ticker>> {
 
+        public TickerExecutor ignoreInvalid() {
+            request.addParameter("ignore_invalid", Boolean.TRUE.toString().toLowerCase());
+
+            return this;
+        }
+
         @Override
         public Map<String, Ticker> execute() throws IOException {
             Map<String, Ticker> result = new HashMap<>();
@@ -123,6 +129,12 @@ public class PublicApi {
             return this;
         }
 
+        public DepthExecutor ignoreInvalid() {
+            request.addParameter("ignore_invalid", Boolean.TRUE.toString().toLowerCase());
+
+            return this;
+        }
+
         @Override
         public Map<String, Depth> execute() throws IOException {
             Map<String, Depth> result = new HashMap<>();
@@ -147,6 +159,12 @@ public class PublicApi {
 
         public TradeExecutor setLimit(int limit) {
             request.addParameter("limit", Integer.toString(limit));
+
+            return this;
+        }
+
+        public TradeExecutor ignoreInvalid() {
+            request.addParameter("ignore_invalid", Boolean.TRUE.toString().toLowerCase());
 
             return this;
         }
