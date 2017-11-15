@@ -5,10 +5,10 @@ repositories {
 }
 
 dependencies {
-    api group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.3'
-    api group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.2'
-    api group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.9.2'
-    api group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.2'
+    api 'org.apache.httpcomponents:httpclient:4.5.3'
+    api 'com.fasterxml.jackson.core:jackson-core:2.9.2'
+    api 'com.fasterxml.jackson.core:jackson-annotations:2.9.2'
+    api 'com.fasterxml.jackson.core:jackson-databind:2.9.2'
 
     testImplementation 'junit:junit:4.12'
 }

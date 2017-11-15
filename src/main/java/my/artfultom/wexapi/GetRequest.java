@@ -32,7 +32,7 @@ public class GetRequest {
         parameters = new HashMap<>();
     }
 
-    public String append(String part) {
+    public GetRequest append(String part) {
         if (this.url.endsWith("/")) {
             this.url = this.url.substring("/".length());
         }
@@ -43,11 +43,13 @@ public class GetRequest {
 
         this.url = this.url.concat("/").concat(part);
 
-        return this.url;
+        return this;
     }
 
-    public void addParameter(String name, String value) {
+    public GetRequest addParameter(String name, String value) {
         parameters.put(name, value);
+
+        return this;
     }
 
     public String execute() throws IOException {

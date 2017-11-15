@@ -40,43 +40,49 @@ public class PublicApi {
     }
 
     public TickerExecutor getTicker(String pair) throws IOException {
-        this.request.append("ticker");
-        this.request.append(pair);
+        this.request
+                .append("ticker")
+                .append(pair);
 
         return new TickerExecutor();
     }
 
     public TickerExecutor getTicker(List<String> pairs) throws IOException {
-        this.request.append("ticker");
-        this.request.append(String.join("-", pairs));
+        this.request
+                .append("ticker")
+                .append(String.join("-", pairs));
 
         return new TickerExecutor();
     }
 
     public DepthExecutor getDepth(String pair) throws IOException {
-        this.request.append("depth");
-        this.request.append(pair);
+        this.request
+                .append("depth")
+                .append(pair);
 
         return new DepthExecutor();
     }
 
     public DepthExecutor getDepth(List<String> pairs) throws IOException {
-        this.request.append("depth");
-        this.request.append(String.join("-", pairs));
+        this.request
+                .append("depth")
+                .append(String.join("-", pairs));
 
         return new DepthExecutor();
     }
 
     public TradeExecutor getTrade(String pair) throws IOException {
-        this.request.append("trades");
-        this.request.append(pair);
+        this.request
+                .append("trades")
+                .append(pair);
 
         return new TradeExecutor();
     }
 
     public TradeExecutor getTrade(List<String> pairs) throws IOException {
-        this.request.append("trades");
-        this.request.append(String.join("-", pairs));
+        this.request
+                .append("trades")
+                .append(String.join("-", pairs));
 
         return new TradeExecutor();
     }
