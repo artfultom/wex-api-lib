@@ -14,8 +14,10 @@ import java.util.stream.Collectors;
 
 public class GetRequest {
 
-    private CloseableHttpClient httpClient = null;
+    private CloseableHttpClient httpClient;
+
     private String url;
+
     private Map<String, String> parameters;
 
     public GetRequest(CloseableHttpClient httpClient, String url) {

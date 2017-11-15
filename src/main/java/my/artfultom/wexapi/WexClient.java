@@ -8,7 +8,8 @@ import java.io.IOException;
 
 public class WexClient implements Closeable {
 
-    private CloseableHttpClient httpClient = null;
+    private CloseableHttpClient httpClient;
+
     private String url;
 
     public WexClient(String url) {

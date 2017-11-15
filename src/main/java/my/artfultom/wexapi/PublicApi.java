@@ -31,124 +31,154 @@ public class PublicApi {
         this.version = version;
     }
 
-    public Info getInfo() throws IOException {
+    public InfoExecutor getInfo() throws IOException {
         this.request.append("info");
 
-        String responseStr = request.execute();
-
-        return new ObjectMapper().readValue(responseStr, Info.class);
+        return new InfoExecutor();
     }
 
-    public Map<String, Ticker> getTicker(String pair) throws IOException {
+    public TickerExecutor getTicker(String pair) throws IOException {
         this.request.append("ticker");
         this.request.append(pair);
 
-        String responseStr = request.execute();
-
-        return this.parseTicker(responseStr);
+        return new TickerExecutor();
     }
 
-    public Map<String, Ticker> getTicker(List<String> pairs) throws IOException {
+    public TickerExecutor getTicker(List<String> pairs) throws IOException {
         this.request.append("ticker");
         this.request.append(String.join("-", pairs));
 
-        String responseStr = request.execute();
-
-        return this.parseTicker(responseStr);
+        return new TickerExecutor();
     }
 
-    private Map<String, Ticker> parseTicker(String responseStr) throws IOException {
-        Map<String, Ticker> result = new HashMap<>();
-
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode responseJson = mapper.readTree(responseStr);
-
-        for (Iterator<String> it = responseJson.fieldNames(); it.hasNext(); ) {
-            String pairName = it.next();
-            Ticker ticker = mapper.readValue(responseJson.get(pairName).toString(), Ticker.class);
-
-            result.put(pairName, ticker);
-        }
-
-        return result;
-    }
-
-    public Map<String, Depth> getDepth(String pair) throws IOException {
+    public DepthExecutor getDepth(String pair) throws IOException {
         this.request.append("depth");
         this.request.append(pair);
 
-        String responseStr = request.execute();
-
-        return this.parseDepth(responseStr);
+        return new DepthExecutor();
     }
 
-    public Map<String, Depth> getDepth(List<String> pairs) throws IOException {
+    public DepthExecutor getDepth(List<String> pairs) throws IOException {
         this.request.append("depth");
         this.request.append(String.join("-", pairs));
 
-        String responseStr = request.execute();
-
-        return this.parseDepth(responseStr);
+        return new DepthExecutor();
     }
 
-    private Map<String, Depth> parseDepth(String responseStr) throws IOException {
-        Map<String, Depth> result = new HashMap<>();
-
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode responseJson = mapper.readTree(responseStr);
-
-        for (Iterator<String> it = responseJson.fieldNames(); it.hasNext(); ) {
-            String pairName = it.next();
-            Depth depth = mapper.readValue(responseJson.get(pairName).toString(), Depth.class);
-
-            result.put(pairName, depth);
-        }
-
-        return result;
-    }
-
-    public Map<String, List<Trade>> getTrade(String pair) throws IOException {
+    public TradeExecutor getTrade(String pair) throws IOException {
         this.request.append("trades");
         this.request.append(pair);
 
-        String responseStr = request.execute();
-
-        return this.parseTrade(responseStr);
+        return new TradeExecutor();
     }
 
-    public Map<String, List<Trade>> getTrade(List<String> pairs) throws IOException {
+    public TradeExecutor getTrade(List<String> pairs) throws IOException {
         this.request.append("trades");
         this.request.append(String.join("-", pairs));
 
-        String responseStr = request.execute();
-
-        return this.parseTrade(responseStr);
+        return new TradeExecutor();
     }
 
-    private Map<String, List<Trade>> parseTrade(String responseStr) throws IOException {
-        Map<String, List<Trade>> result = new HashMap<>();
+    public interface Executor<T> {
+        T execute() throws IOException;
+    }
 
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode responseJson = mapper.readTree(responseStr);
+    public class InfoExecutor implements Executor<Info> {
 
-        for (Iterator<String> it = responseJson.fieldNames(); it.hasNext(); ) {
-            String pairName = it.next();
+        @Override
+        public Info execute() throws IOException {
+            String responseStr = request.execute();
 
-            JsonNode tradeListJson = responseJson.get(pairName);
+            return new ObjectMapper().readValue(responseStr, Info.class);
+        }
+    }
 
-            List<Trade> tradeList = new ArrayList<>();
+    public class TickerExecutor implements Executor<Map<String, Ticker>> {
 
-            if (tradeListJson.isArray()) {
-                for (JsonNode tradeJson : tradeListJson) {
-                    Trade trade = mapper.readValue(tradeJson.toString(), Trade.class);
+        @Override
+        public Map<String, Ticker> execute() throws IOException {
+            Map<String, Ticker> result = new HashMap<>();
 
-                    tradeList.add(trade);
-                }
+            String responseStr = request.execute();
+
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode responseJson = mapper.readTree(responseStr);
+
+            for (Iterator<String> it = responseJson.fieldNames(); it.hasNext(); ) {
+                String pairName = it.next();
+                Ticker ticker = mapper.readValue(responseJson.get(pairName).toString(), Ticker.class);
+
+                result.put(pairName, ticker);
             }
 
-            result.put(pairName, tradeList);
+            return result;
+        }
+    }
+
+    public class DepthExecutor implements Executor<Map<String, Depth>> {
+
+        public DepthExecutor setLimit(int limit) {
+            request.addParameter("limit", Integer.toString(limit));
+
+            return this;
         }
 
-        return result;
+        @Override
+        public Map<String, Depth> execute() throws IOException {
+            Map<String, Depth> result = new HashMap<>();
+
+            String responseStr = request.execute();
+
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode responseJson = mapper.readTree(responseStr);
+
+            for (Iterator<String> it = responseJson.fieldNames(); it.hasNext(); ) {
+                String pairName = it.next();
+                Depth depth = mapper.readValue(responseJson.get(pairName).toString(), Depth.class);
+
+                result.put(pairName, depth);
+            }
+
+            return result;
+        }
+    }
+
+    public class TradeExecutor implements Executor<Map<String, List<Trade>>> {
+
+        public TradeExecutor setLimit(int limit) {
+            request.addParameter("limit", Integer.toString(limit));
+
+            return this;
+        }
+
+        @Override
+        public Map<String, List<Trade>> execute() throws IOException {
+            Map<String, List<Trade>> result = new HashMap<>();
+
+            String responseStr = request.execute();
+
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode responseJson = mapper.readTree(responseStr);
+
+            for (Iterator<String> it = responseJson.fieldNames(); it.hasNext(); ) {
+                String pairName = it.next();
+
+                JsonNode tradeListJson = responseJson.get(pairName);
+
+                List<Trade> tradeList = new ArrayList<>();
+
+                if (tradeListJson.isArray()) {
+                    for (JsonNode tradeJson : tradeListJson) {
+                        Trade trade = mapper.readValue(tradeJson.toString(), Trade.class);
+
+                        tradeList.add(trade);
+                    }
+                }
+
+                result.put(pairName, tradeList);
+            }
+
+            return result;
+        }
     }
 }

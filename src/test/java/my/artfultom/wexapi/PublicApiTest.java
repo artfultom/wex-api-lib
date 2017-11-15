@@ -10,7 +10,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class PublicApiTest {
 
@@ -20,12 +21,12 @@ public class PublicApiTest {
 
     @Test
     public void getInfo() throws Exception {
-        Info info1 = new WexClient(BASE_URL).publicApi().getInfo();
+        Info info1 = new WexClient(BASE_URL).publicApi().getInfo().execute();
 
         assertNotNull(info1);
         assertNotNull(info1.getPairs());
 
-        Info info2 = new WexClient(BASE_URL).publicApi(3).getInfo();
+        Info info2 = new WexClient(BASE_URL).publicApi(3).getInfo().execute();
 
         assertNotNull(info2);
         assertNotNull(info2.getPairs());
@@ -33,13 +34,13 @@ public class PublicApiTest {
 
     @Test
     public void getTicker() throws Exception {
-        Map<String, Ticker> tickerMap1 = new WexClient(BASE_URL).publicApi().getTicker(DEFAULT_PAIR);
+        Map<String, Ticker> tickerMap1 = new WexClient(BASE_URL).publicApi().getTicker(DEFAULT_PAIR).execute();
 
         assertNotNull(tickerMap1);
         assertTrue(tickerMap1.size() == 1);
         assertNotNull(tickerMap1.get(DEFAULT_PAIR).getLast());
 
-        Map<String, Ticker> tickerMap2 = new WexClient(BASE_URL).publicApi().getTicker(DEFAULT_PAIRS);
+        Map<String, Ticker> tickerMap2 = new WexClient(BASE_URL).publicApi().getTicker(DEFAULT_PAIRS).execute();
 
         assertNotNull(tickerMap2);
         assertTrue(tickerMap2.size() == 2);
@@ -49,7 +50,7 @@ public class PublicApiTest {
 
     @Test
     public void getDepth() throws Exception {
-        Map<String, Depth> depthMap1 = new WexClient(BASE_URL).publicApi().getDepth(DEFAULT_PAIR);
+        Map<String, Depth> depthMap1 = new WexClient(BASE_URL).publicApi().getDepth(DEFAULT_PAIR).execute();
 
         assertNotNull(depthMap1);
         assertTrue(depthMap1.size() == 1);
@@ -57,7 +58,7 @@ public class PublicApiTest {
         assertNotNull(depthMap1.get(DEFAULT_PAIR).getAsks());
         assertNotNull(depthMap1.get(DEFAULT_PAIR).getBids());
 
-        Map<String, Depth> depthMap2 = new WexClient(BASE_URL).publicApi().getDepth(DEFAULT_PAIRS);
+        Map<String, Depth> depthMap2 = new WexClient(BASE_URL).publicApi().getDepth(DEFAULT_PAIRS).execute();
 
         assertNotNull(depthMap2);
         assertTrue(depthMap2.size() == 2);
@@ -71,7 +72,7 @@ public class PublicApiTest {
 
     @Test
     public void getTrade() throws Exception {
-        Map<String, List<Trade>> trades1 = new WexClient(BASE_URL).publicApi().getTrade(DEFAULT_PAIR);
+        Map<String, List<Trade>> trades1 = new WexClient(BASE_URL).publicApi().getTrade(DEFAULT_PAIR).execute();
 
         assertNotNull(trades1);
         assertTrue(trades1.size() == 1);
@@ -79,7 +80,7 @@ public class PublicApiTest {
         assertNotNull(trades1.get(DEFAULT_PAIR).get(0));
         assertNotNull(trades1.get(DEFAULT_PAIR).get(0).getPrice());
 
-        Map<String, List<Trade>> trades2 = new WexClient(BASE_URL).publicApi().getTrade(DEFAULT_PAIRS);
+        Map<String, List<Trade>> trades2 = new WexClient(BASE_URL).publicApi().getTrade(DEFAULT_PAIRS).execute();
 
         assertNotNull(trades2);
         assertTrue(trades2.size() == 2);
