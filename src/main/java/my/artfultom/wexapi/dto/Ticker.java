@@ -1,10 +1,12 @@
 package my.artfultom.wexapi.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Ticker implements Serializable {
 
     @JsonProperty("low")

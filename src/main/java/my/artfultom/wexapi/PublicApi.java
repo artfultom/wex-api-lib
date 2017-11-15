@@ -1,11 +1,13 @@
 package my.artfultom.wexapi;
 
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import my.artfultom.wexapi.dto.Depth;
 import my.artfultom.wexapi.dto.Info;
 import my.artfultom.wexapi.dto.Ticker;
 import my.artfultom.wexapi.dto.Trade;
+import my.artfultom.wexapi.exception.UnsuccessException;
 
 import java.io.IOException;
 import java.util.*;
@@ -89,7 +91,22 @@ public class PublicApi {
         public Info execute() throws IOException {
             String responseStr = request.execute();
 
-            return new ObjectMapper().readValue(responseStr, Info.class);
+            ObjectMapper mapper = new ObjectMapper();
+
+            try {
+                return mapper.readValue(responseStr, Info.class);
+            } catch (JsonMappingException e) {
+                JsonNode jsonNode = mapper.readTree(responseStr);
+
+                if (jsonNode.has("success") && jsonNode.get("success").intValue() == 0) {
+                    throw new UnsuccessException(
+                            jsonNode.get("success").intValue(),
+                            jsonNode.get("error").toString()
+                    );
+                } else {
+                    throw new RuntimeException(e);
+                }
+            }
         }
     }
 
@@ -110,14 +127,27 @@ public class PublicApi {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode responseJson = mapper.readTree(responseStr);
 
-            for (Iterator<String> it = responseJson.fieldNames(); it.hasNext(); ) {
-                String pairName = it.next();
-                Ticker ticker = mapper.readValue(responseJson.get(pairName).toString(), Ticker.class);
+            try {
+                for (Iterator<String> it = responseJson.fieldNames(); it.hasNext(); ) {
+                    String pairName = it.next();
+                    Ticker ticker = mapper.readValue(responseJson.get(pairName).toString(), Ticker.class);
 
-                result.put(pairName, ticker);
+                    result.put(pairName, ticker);
+                }
+
+                return result;
+            } catch (JsonMappingException e) {
+                JsonNode jsonNode = mapper.readTree(responseStr);
+
+                if (jsonNode.has("success") && jsonNode.get("success").intValue() == 0) {
+                    throw new UnsuccessException(
+                            jsonNode.get("success").intValue(),
+                            jsonNode.get("error").toString()
+                    );
+                } else {
+                    throw new RuntimeException(e);
+                }
             }
-
-            return result;
         }
     }
 
@@ -144,14 +174,27 @@ public class PublicApi {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode responseJson = mapper.readTree(responseStr);
 
-            for (Iterator<String> it = responseJson.fieldNames(); it.hasNext(); ) {
-                String pairName = it.next();
-                Depth depth = mapper.readValue(responseJson.get(pairName).toString(), Depth.class);
+            try {
+                for (Iterator<String> it = responseJson.fieldNames(); it.hasNext(); ) {
+                    String pairName = it.next();
+                    Depth depth = mapper.readValue(responseJson.get(pairName).toString(), Depth.class);
 
-                result.put(pairName, depth);
+                    result.put(pairName, depth);
+                }
+
+                return result;
+            } catch (JsonMappingException e) {
+                JsonNode jsonNode = mapper.readTree(responseStr);
+
+                if (jsonNode.has("success") && jsonNode.get("success").intValue() == 0) {
+                    throw new UnsuccessException(
+                            jsonNode.get("success").intValue(),
+                            jsonNode.get("error").toString()
+                    );
+                } else {
+                    throw new RuntimeException(e);
+                }
             }
-
-            return result;
         }
     }
 
@@ -178,25 +221,38 @@ public class PublicApi {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode responseJson = mapper.readTree(responseStr);
 
-            for (Iterator<String> it = responseJson.fieldNames(); it.hasNext(); ) {
-                String pairName = it.next();
+            try {
+                for (Iterator<String> it = responseJson.fieldNames(); it.hasNext(); ) {
+                    String pairName = it.next();
 
-                JsonNode tradeListJson = responseJson.get(pairName);
+                    JsonNode tradeListJson = responseJson.get(pairName);
 
-                List<Trade> tradeList = new ArrayList<>();
+                    List<Trade> tradeList = new ArrayList<>();
 
-                if (tradeListJson.isArray()) {
-                    for (JsonNode tradeJson : tradeListJson) {
-                        Trade trade = mapper.readValue(tradeJson.toString(), Trade.class);
+                    if (tradeListJson.isArray()) {
+                        for (JsonNode tradeJson : tradeListJson) {
+                            Trade trade = mapper.readValue(tradeJson.toString(), Trade.class);
 
-                        tradeList.add(trade);
+                            tradeList.add(trade);
+                        }
                     }
+
+                    result.put(pairName, tradeList);
                 }
 
-                result.put(pairName, tradeList);
-            }
+                return result;
+            } catch (JsonMappingException e) {
+                JsonNode jsonNode = mapper.readTree(responseStr);
 
-            return result;
+                if (jsonNode.has("success") && jsonNode.get("success").intValue() == 0) {
+                    throw new UnsuccessException(
+                            jsonNode.get("success").intValue(),
+                            jsonNode.get("error").toString()
+                    );
+                } else {
+                    throw new RuntimeException(e);
+                }
+            }
         }
     }
 }
