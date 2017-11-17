@@ -16,20 +16,13 @@ public class GetRequest {
 
     private CloseableHttpClient httpClient;
 
-    private String url;
+    private String url = "";
 
-    private Map<String, String> parameters;
+    private Map<String, String> parameters = new HashMap<>();
 
     public GetRequest(CloseableHttpClient httpClient, String url) {
         this.httpClient = httpClient;
-
-        if (url == null) {
-            this.url = "";
-        } else {
-            this.url = url;
-        }
-
-        parameters = new HashMap<>();
+        this.url = url;
     }
 
     public GetRequest append(String part) {
@@ -53,14 +46,14 @@ public class GetRequest {
     }
 
     public String execute() throws IOException {
-        HttpGet httpGet = new HttpGet(getEntireUrl());
+        HttpGet httpGet = new HttpGet(this.getEntireUrl());
         CloseableHttpResponse response = httpClient.execute(httpGet);
         HttpEntity entity = response.getEntity();
 
         return EntityUtils.toString(entity);
     }
 
-    private String getEntireUrl() {
+    public String getEntireUrl() {
         String result = url;
 
         if (parameters.size() > 0) {

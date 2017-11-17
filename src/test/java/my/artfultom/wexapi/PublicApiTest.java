@@ -1,95 +1,198 @@
 package my.artfultom.wexapi;
 
-import my.artfultom.wexapi.dto.Depth;
-import my.artfultom.wexapi.dto.Info;
-import my.artfultom.wexapi.dto.Ticker;
-import my.artfultom.wexapi.dto.Trade;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
+@RunWith(PowerMockRunner.class)
+@PowerMockIgnore("javax.net.ssl.*")
+@PrepareForTest(value = {WexClient.class, GetRequest.class, HttpClients.class, EntityUtils.class})
 public class PublicApiTest {
 
     private static final String BASE_URL = "https://wex.nz/api";
     private static final String DEFAULT_PAIR = "btc_usd";
     private static final List<String> DEFAULT_PAIRS = Arrays.asList("btc_usd", "ltc_btc");
 
+    @Before
+    public void setup() throws IOException {
+        HttpEntity httpEntity = Mockito.mock(HttpEntity.class);
+
+        CloseableHttpResponse closeableHttpResponse = Mockito.mock(CloseableHttpResponse.class);
+        Mockito.when(closeableHttpResponse.getEntity()).thenReturn(httpEntity);
+
+        CloseableHttpClient httpClient = Mockito.mock(CloseableHttpClient.class);
+        Mockito.when(httpClient.execute(Mockito.any())).thenReturn(closeableHttpResponse);
+
+        PowerMockito.mockStatic(HttpClients.class);
+        PowerMockito.when(HttpClients.createDefault()).thenReturn(httpClient);
+    }
+
     @Test
     public void getInfo() throws Exception {
-        Info info1 = new WexClient(BASE_URL).publicApi().getInfo().execute();
+        List<String> answers = Arrays.asList(
+                "https://wex.nz/api/3/info",
+                "https://wex.nz/api/99/info"
+        );
 
-        assertNotNull(info1);
-        assertNotNull(info1.getPairs());
+        HttpGet httpGet = Mockito.mock(HttpGet.class);
 
-        Info info2 = new WexClient(BASE_URL).publicApi(3).getInfo().execute();
+        PowerMockito
+                .whenNew(HttpGet.class).withArguments(Mockito.anyString())
+                .thenAnswer(new Answer<HttpGet>() {
+                    private int counter;
 
-        assertNotNull(info2);
-        assertNotNull(info2.getPairs());
+                    @Override
+                    public HttpGet answer(InvocationOnMock invocation) throws Throwable {
+                        Assert.assertEquals(
+                                "Wrong request #" + counter,
+                                invocation.getArgument(0), answers.get(counter)
+                        );
+
+                        counter++;
+
+                        return httpGet;
+                    }
+                });
+
+        PowerMockito.mockStatic(EntityUtils.class);
+        PowerMockito.when(EntityUtils.toString(Mockito.any())).thenReturn("{\"pairs\":{\"btc_usd\":{}}}");
+
+        new WexClient(BASE_URL).publicApi().getInfo().execute();
+        new WexClient(BASE_URL).publicApi(99).getInfo().execute();
     }
 
     @Test
     public void getTicker() throws Exception {
-        Map<String, Ticker> tickerMap1 = new WexClient(BASE_URL).publicApi().getTicker(DEFAULT_PAIR).execute();
+        List<String> answers = Arrays.asList(
+                "https://wex.nz/api/3/ticker/btc_usd",
+                "https://wex.nz/api/3/ticker/btc_usd?ignore_invalid=true",
+                "https://wex.nz/api/3/ticker/btc_usd-ltc_btc"
+        );
 
-        assertNotNull(tickerMap1);
-        assertTrue(tickerMap1.size() == 1);
-        assertNotNull(tickerMap1.get(DEFAULT_PAIR).getLast());
+        HttpGet httpGet = Mockito.mock(HttpGet.class);
 
-        Map<String, Ticker> tickerMap2 = new WexClient(BASE_URL).publicApi().getTicker(DEFAULT_PAIRS).execute();
+        PowerMockito
+                .whenNew(HttpGet.class).withArguments(Mockito.anyString())
+                .thenAnswer(new Answer<HttpGet>() {
+                    private int counter;
 
-        assertNotNull(tickerMap2);
-        assertTrue(tickerMap2.size() == 2);
-        assertNotNull(tickerMap2.get(DEFAULT_PAIR).getLast());
-        assertNotNull(tickerMap2.get("ltc_btc").getLast());
+                    @Override
+                    public HttpGet answer(InvocationOnMock invocation) throws Throwable {
+                        Assert.assertEquals(
+                                "Wrong request #" + counter,
+                                invocation.getArgument(0), answers.get(counter)
+                        );
+
+                        counter++;
+
+                        return httpGet;
+                    }
+                });
+
+        PowerMockito.mockStatic(EntityUtils.class);
+        PowerMockito.when(EntityUtils.toString(Mockito.any())).thenReturn("{\"btc_usd\":{}}");
+
+        new WexClient(BASE_URL).publicApi().getTicker(DEFAULT_PAIR).execute();
+        new WexClient(BASE_URL).publicApi().getTicker(DEFAULT_PAIR).ignoreInvalid().execute();
+        new WexClient(BASE_URL).publicApi().getTicker(DEFAULT_PAIRS).execute();
     }
 
     @Test
     public void getDepth() throws Exception {
-        Map<String, Depth> depthMap1 = new WexClient(BASE_URL).publicApi().getDepth(DEFAULT_PAIR).execute();
+        List<String> answers = Arrays.asList(
+                "https://wex.nz/api/3/depth/btc_usd",
+                "https://wex.nz/api/3/depth/btc_usd?ignore_invalid=true",
+                "https://wex.nz/api/3/depth/btc_usd?limit=1",
+                "https://wex.nz/api/3/depth/btc_usd?limit=1&ignore_invalid=true",
+                "https://wex.nz/api/3/depth/btc_usd-ltc_btc"
+        );
 
-        assertNotNull(depthMap1);
-        assertTrue(depthMap1.size() == 1);
-        assertNotNull(depthMap1.get(DEFAULT_PAIR));
-        assertNotNull(depthMap1.get(DEFAULT_PAIR).getAsks());
-        assertNotNull(depthMap1.get(DEFAULT_PAIR).getBids());
+        HttpGet httpGet = Mockito.mock(HttpGet.class);
 
-        Map<String, Depth> depthMap2 = new WexClient(BASE_URL).publicApi().getDepth(DEFAULT_PAIRS).execute();
+        PowerMockito
+                .whenNew(HttpGet.class).withArguments(Mockito.anyString())
+                .thenAnswer(new Answer<HttpGet>() {
+                    private int counter;
 
-        assertNotNull(depthMap2);
-        assertTrue(depthMap2.size() == 2);
-        assertNotNull(depthMap2.get("btc_usd"));
-        assertNotNull(depthMap2.get("btc_usd").getAsks());
-        assertNotNull(depthMap2.get("btc_usd").getBids());
-        assertNotNull(depthMap2.get("ltc_btc"));
-        assertNotNull(depthMap2.get("ltc_btc").getAsks());
-        assertNotNull(depthMap2.get("ltc_btc").getBids());
+                    @Override
+                    public HttpGet answer(InvocationOnMock invocation) throws Throwable {
+                        Assert.assertEquals(
+                                "Wrong request #" + counter,
+                                invocation.getArgument(0), answers.get(counter)
+                        );
+
+                        counter++;
+
+                        return httpGet;
+                    }
+                });
+
+        PowerMockito.mockStatic(EntityUtils.class);
+        PowerMockito.when(EntityUtils.toString(Mockito.any())).thenReturn("{\"btc_usd\":{\"asks\":[],\"bids\":[]}}");
+
+        new WexClient(BASE_URL).publicApi().getDepth(DEFAULT_PAIR).execute();
+        new WexClient(BASE_URL).publicApi().getDepth(DEFAULT_PAIR).ignoreInvalid().execute();
+        new WexClient(BASE_URL).publicApi().getDepth(DEFAULT_PAIR).setLimit(1).execute();
+        new WexClient(BASE_URL).publicApi().getDepth(DEFAULT_PAIR).ignoreInvalid().setLimit(1).execute();
+        new WexClient(BASE_URL).publicApi().getDepth(DEFAULT_PAIRS).execute();
     }
 
     @Test
     public void getTrade() throws Exception {
-        Map<String, List<Trade>> trades1 = new WexClient(BASE_URL).publicApi().getTrade(DEFAULT_PAIR).execute();
+        List<String> answers = Arrays.asList(
+                "https://wex.nz/api/3/trades/btc_usd",
+                "https://wex.nz/api/3/trades/btc_usd?ignore_invalid=true",
+                "https://wex.nz/api/3/trades/btc_usd?limit=1",
+                "https://wex.nz/api/3/trades/btc_usd?limit=1&ignore_invalid=true",
+                "https://wex.nz/api/3/trades/btc_usd-ltc_btc"
+        );
 
-        assertNotNull(trades1);
-        assertTrue(trades1.size() == 1);
-        assertNotNull(trades1.get(DEFAULT_PAIR));
-        assertNotNull(trades1.get(DEFAULT_PAIR).get(0));
-        assertNotNull(trades1.get(DEFAULT_PAIR).get(0).getPrice());
+        HttpGet httpGet = Mockito.mock(HttpGet.class);
 
-        Map<String, List<Trade>> trades2 = new WexClient(BASE_URL).publicApi().getTrade(DEFAULT_PAIRS).execute();
+        PowerMockito
+                .whenNew(HttpGet.class).withArguments(Mockito.anyString())
+                .thenAnswer(new Answer<HttpGet>() {
+                    private int counter;
 
-        assertNotNull(trades2);
-        assertTrue(trades2.size() == 2);
-        assertNotNull(trades2.get("btc_usd"));
-        assertNotNull(trades2.get("btc_usd").get(0));
-        assertNotNull(trades2.get("btc_usd").get(0).getPrice());
-        assertNotNull(trades2.get("ltc_btc"));
-        assertNotNull(trades2.get("ltc_btc").get(0));
-        assertNotNull(trades2.get("ltc_btc").get(0).getPrice());
+                    @Override
+                    public HttpGet answer(InvocationOnMock invocation) throws Throwable {
+                        Assert.assertEquals(
+                                "Wrong request #" + counter,
+                                invocation.getArgument(0), answers.get(counter)
+                        );
+
+                        counter++;
+
+                        return httpGet;
+                    }
+                });
+
+        PowerMockito.mockStatic(EntityUtils.class);
+        PowerMockito.when(EntityUtils.toString(Mockito.any())).thenReturn("{\"btc_usd\":[{}]}");
+
+        new WexClient(BASE_URL).publicApi().getTrade(DEFAULT_PAIR).execute();
+        new WexClient(BASE_URL).publicApi().getTrade(DEFAULT_PAIR).ignoreInvalid().execute();
+        new WexClient(BASE_URL).publicApi().getTrade(DEFAULT_PAIR).setLimit(1).execute();
+        new WexClient(BASE_URL).publicApi().getTrade(DEFAULT_PAIR).ignoreInvalid().setLimit(1).execute();
+        new WexClient(BASE_URL).publicApi().getTrade(DEFAULT_PAIRS).execute();
     }
 
 }
