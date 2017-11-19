@@ -1,5 +1,6 @@
 package my.artfultom.wexapi;
 
+import my.artfultom.wexapi.request.GetRequest;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -27,7 +28,7 @@ import java.util.List;
 @PrepareForTest(value = {WexClient.class, GetRequest.class, HttpClients.class, EntityUtils.class})
 public class PublicApiTest {
 
-    private static final String BASE_URL = "https://wex.nz/api";
+    private static final String BASE_URL = "https://wex.nz";
     private static final String DEFAULT_PAIR = "btc_usd";
     private static final List<String> DEFAULT_PAIRS = Arrays.asList("btc_usd", "ltc_btc");
 
@@ -151,7 +152,7 @@ public class PublicApiTest {
         new WexClient(BASE_URL).publicApi().getDepth(DEFAULT_PAIR).execute();
         new WexClient(BASE_URL).publicApi().getDepth(DEFAULT_PAIR).ignoreInvalid().execute();
         new WexClient(BASE_URL).publicApi().getDepth(DEFAULT_PAIR).setLimit(1).execute();
-        new WexClient(BASE_URL).publicApi().getDepth(DEFAULT_PAIR).ignoreInvalid().setLimit(1).execute();
+        new WexClient(BASE_URL).publicApi().getDepth(DEFAULT_PAIR).setLimit(1).ignoreInvalid().execute();
         new WexClient(BASE_URL).publicApi().getDepth(DEFAULT_PAIRS).execute();
     }
 
@@ -191,7 +192,7 @@ public class PublicApiTest {
         new WexClient(BASE_URL).publicApi().getTrade(DEFAULT_PAIR).execute();
         new WexClient(BASE_URL).publicApi().getTrade(DEFAULT_PAIR).ignoreInvalid().execute();
         new WexClient(BASE_URL).publicApi().getTrade(DEFAULT_PAIR).setLimit(1).execute();
-        new WexClient(BASE_URL).publicApi().getTrade(DEFAULT_PAIR).ignoreInvalid().setLimit(1).execute();
+        new WexClient(BASE_URL).publicApi().getTrade(DEFAULT_PAIR).setLimit(1).ignoreInvalid().execute();
         new WexClient(BASE_URL).publicApi().getTrade(DEFAULT_PAIRS).execute();
     }
 

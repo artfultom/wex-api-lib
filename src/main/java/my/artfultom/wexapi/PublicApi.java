@@ -8,6 +8,7 @@ import my.artfultom.wexapi.dto.Info;
 import my.artfultom.wexapi.dto.Ticker;
 import my.artfultom.wexapi.dto.Trade;
 import my.artfultom.wexapi.exception.UnsuccessException;
+import my.artfultom.wexapi.request.GetRequest;
 
 import java.io.IOException;
 import java.util.*;
@@ -15,18 +16,21 @@ import java.util.*;
 public class PublicApi {
 
     private static final int PUBLIC_API_DEFAULT_VERSION = 3;
+    private static final String PUBLIC_API_PREFIX = "api";
 
     private int version = PUBLIC_API_DEFAULT_VERSION;
 
     private GetRequest request;
 
     public PublicApi(GetRequest request) {
+        request.append(PUBLIC_API_PREFIX);
         request.append(String.valueOf(version));
 
         this.request = request;
     }
 
     public PublicApi(GetRequest request, int version) {
+        request.append(PUBLIC_API_PREFIX);
         request.append(String.valueOf(version));
 
         this.request = request;
