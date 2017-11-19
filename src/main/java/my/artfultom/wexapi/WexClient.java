@@ -14,9 +14,12 @@ public class WexClient implements Closeable {
     private CloseableHttpClient httpClient;
 
     private String url;
+
     private String key;
+
     private String secret;
-    private int nonce;
+
+    private Integer nonce;
 
     public WexClient(String url) {
         this.httpClient = HttpClients.createDefault();
@@ -51,7 +54,7 @@ public class WexClient implements Closeable {
             throw new ReadOnlyException();
         }
 
-        return new TradeApi(new AuthorizedPostRequest(this.httpClient, this.url, this.key, this.secret));
+        return new TradeApi(new AuthorizedPostRequest(this.httpClient, this.url, this.key, this.secret, this.nonce));
     }
 
     @Override

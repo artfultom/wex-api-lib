@@ -22,14 +22,19 @@ import java.util.stream.Collectors;
 public class AuthorizedPostRequest extends GenericRequest {
 
     private List<NameValuePair> postData = new ArrayList<>();
+
     private String key;
+
     private String secret;
 
-    public AuthorizedPostRequest(CloseableHttpClient httpClient, String url, String key, String secret) {
+    private Integer nonce;
+
+    public AuthorizedPostRequest(CloseableHttpClient httpClient, String url, String key, String secret, Integer nonce) {
         super(httpClient, url);
 
         this.key = key;
         this.secret = secret;
+        this.nonce = nonce;
     }
 
     @Override
@@ -53,20 +58,18 @@ public class AuthorizedPostRequest extends GenericRequest {
         HttpEntity entity = response.getEntity();
 
         return EntityUtils.toString(entity);
+
+        // {"success":0,"error":"invalid nonce parameter; on key:212372980, you sent:'', you should send:212372981"}
     }
 
     private String getHmacSHA512(String str, String secret) {
-        String result = "";
-
         try {
             Mac macInst = Mac.getInstance("HmacSHA512");
             macInst.init(new SecretKeySpec(secret.getBytes("UTF-8"), "HmacSHA512"));
 
-            result = DatatypeConverter.printHexBinary((macInst.doFinal(str.getBytes("UTF-8")))).toLowerCase();
+            return DatatypeConverter.printHexBinary((macInst.doFinal(str.getBytes("UTF-8")))).toLowerCase();
         } catch (NoSuchAlgorithmException | UnsupportedEncodingException | InvalidKeyException e) {
-            e.printStackTrace();    // TODO
+            throw new RuntimeException(e);
         }
-
-        return result;  // TODO
     }
 }

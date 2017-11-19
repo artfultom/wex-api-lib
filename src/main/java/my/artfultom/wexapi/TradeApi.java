@@ -1,8 +1,11 @@
 package my.artfultom.wexapi;
 
 import my.artfultom.wexapi.request.AuthorizedPostRequest;
+import my.artfultom.wexapi.util.OperationType;
+import my.artfultom.wexapi.util.Order;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 
 public class TradeApi {
 
@@ -17,13 +20,115 @@ public class TradeApi {
     }
 
     public String getInfo() throws IOException {
-        this.request.addParameter("nonce", "212372975");
         this.request.addParameter("method", "getInfo");
 
         return this.request.execute();
     }
 
-    public interface Executor<T> {
-        T execute() throws IOException;
+    public String trade(String pair, OperationType type, BigDecimal rate, BigDecimal amount) throws IOException {
+        this.request.addParameter("method", "Trade");
+        this.request.addParameter("pair", pair);
+        this.request.addParameter("type", type.toString());
+        this.request.addParameter("rate", rate.toString());
+        this.request.addParameter("amount", amount.toString());
+
+        return this.request.execute();
+    }
+
+    public String activeOrders(String pair) throws IOException {
+        this.request.addParameter("method", "ActiveOrders");
+        this.request.addParameter("pair", pair);
+
+        return this.request.execute();
+    }
+
+    public String orderInfo(Long orderId) throws IOException {
+        this.request.addParameter("method", "OrderInfo");
+        this.request.addParameter("order_id", orderId.toString());
+
+        return this.request.execute();
+    }
+
+    public String cancelOrder(Long orderId) throws IOException {
+        this.request.addParameter("method", "CancelOrder");
+        this.request.addParameter("order_id", orderId.toString());
+
+        return this.request.execute();
+    }
+
+    public String tradeHistory(
+            Long from,
+            Integer count,
+            Long fromId,
+            Long endId,
+            Order order,
+            Long since,
+            Long end,
+            String pair
+    ) throws IOException {
+        this.request.addParameter("method", "TradeHistory");
+        this.request.addParameter("from", from.toString());
+        this.request.addParameter("count", count.toString());
+        this.request.addParameter("from_id", fromId.toString());
+        this.request.addParameter("end_id", endId.toString());
+        this.request.addParameter("order", order.toString());
+        this.request.addParameter("since", since.toString());
+        this.request.addParameter("end", end.toString());
+        this.request.addParameter("pair", pair);
+
+        return this.request.execute();
+    }
+
+    public String transHistory(
+            Long from,
+            Integer count,
+            Long fromId,
+            Long endId,
+            Order order,
+            Long since,
+            Long end
+    ) throws IOException {
+        this.request.addParameter("method", "TransHistory");
+        this.request.addParameter("from", from.toString());
+        this.request.addParameter("count", count.toString());
+        this.request.addParameter("from_id", fromId.toString());
+        this.request.addParameter("end_id", endId.toString());
+        this.request.addParameter("order", order.toString());
+        this.request.addParameter("since", since.toString());
+        this.request.addParameter("end", end.toString());
+
+        return this.request.execute();
+    }
+
+    public String coinDepositAddress(String coinName) throws IOException {
+        this.request.addParameter("method", "CoinDepositAddress");
+        this.request.addParameter("coinName", coinName);
+
+        return this.request.execute();
+    }
+
+    public String withdrawCoin(String coinName, BigDecimal amount, String address) throws IOException {
+        this.request.addParameter("method", "WithdrawCoin");
+        this.request.addParameter("coinName", coinName);
+        this.request.addParameter("amount", amount.toString());
+        this.request.addParameter("address", address);
+
+        return this.request.execute();
+    }
+
+    public String createCoupon(String currency, BigDecimal amount, String receiver) throws IOException {
+        this.request.addParameter("method", "CreateCoupon");
+        this.request.addParameter("currency", currency);
+        this.request.addParameter("amount", amount.toString());
+        this.request.addParameter("receiver", receiver);
+
+        return this.request.execute();
+    }
+
+    public String redeemCoupon(String coupon) throws IOException {
+        this.request.addParameter("method", "RedeemCoupon");
+        this.request.addParameter("coupon", coupon);
+
+        return this.request.execute();
     }
 }
