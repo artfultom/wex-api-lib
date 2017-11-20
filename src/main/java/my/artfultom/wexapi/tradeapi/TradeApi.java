@@ -1,6 +1,11 @@
 package my.artfultom.wexapi.tradeapi;
 
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import my.artfultom.wexapi.exception.UnsuccessException;
 import my.artfultom.wexapi.request.AuthorizedPostRequest;
+import my.artfultom.wexapi.tradeapi.dto.GetInfo;
 import my.artfultom.wexapi.util.OperationType;
 import my.artfultom.wexapi.util.Order;
 
@@ -19,10 +24,27 @@ public class TradeApi {
         this.request = request;
     }
 
-    public String getInfo() throws IOException {
+    public GetInfo getInfo() throws IOException {
         this.request.addParameter("method", "getInfo");
 
-        return this.request.execute();
+        String responseStr = this.request.execute();
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        try {
+            return mapper.readValue(responseStr, GetInfo.class);
+        } catch (JsonMappingException e) {
+            JsonNode jsonNode = mapper.readTree(responseStr);
+
+            if (jsonNode.has("success") && jsonNode.get("success").intValue() == 0) {
+                throw new UnsuccessException(
+                        jsonNode.get("success").intValue(),
+                        jsonNode.get("error").toString()
+                );
+            } else {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     public String trade(String pair, OperationType type, BigDecimal rate, BigDecimal amount) throws IOException {

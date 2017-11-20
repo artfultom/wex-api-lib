@@ -2,9 +2,12 @@ package my.artfultom.wexapi.tradeapi.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import my.artfultom.wexapi.util.DateDeserializer;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -48,7 +51,8 @@ public class GetInfo implements Serializable {
         private int openOrders;
 
         @JsonProperty("server_time")
-        private long serverTime;
+        @JsonDeserialize(using = DateDeserializer.class)
+        private LocalDateTime serverTime;
 
         public ReturnValue() {
         }
@@ -77,11 +81,11 @@ public class GetInfo implements Serializable {
             this.openOrders = openOrders;
         }
 
-        public long getServerTime() {
+        public LocalDateTime getServerTime() {
             return serverTime;
         }
 
-        public void setServerTime(long serverTime) {
+        public void setServerTime(LocalDateTime serverTime) {
             this.serverTime = serverTime;
         }
     }
