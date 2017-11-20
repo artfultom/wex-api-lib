@@ -21,7 +21,7 @@ public class WexClient implements Closeable {
 
     private String secret;
 
-    private Integer nonce;
+    private Integer nonce = 0;
 
     public WexClient(String url) {
         this.httpClient = HttpClients.createDefault();
@@ -44,11 +44,11 @@ public class WexClient implements Closeable {
     }
 
     public PublicApi publicApi() {
-        return new PublicApi(new GetRequest(this.httpClient, this.url));
+        return new PublicApi(new GetRequest(this));
     }
 
     public PublicApi publicApi(int version) {
-        return new PublicApi(new GetRequest(this.httpClient, this.url), version);
+        return new PublicApi(new GetRequest(this), version);
     }
 
     public TradeApi tradeApi() {
@@ -56,7 +56,7 @@ public class WexClient implements Closeable {
             throw new ReadOnlyException();
         }
 
-        return new TradeApi(new AuthorizedPostRequest(this.httpClient, this.url, this.key, this.secret, this.nonce));
+        return new TradeApi(new AuthorizedPostRequest(this));
     }
 
     @Override
@@ -64,5 +64,29 @@ public class WexClient implements Closeable {
         if (this.httpClient != null) {
             this.httpClient.close();
         }
+    }
+
+    public CloseableHttpClient getHttpClient() {
+        return httpClient;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public String getSecret() {
+        return secret;
+    }
+
+    public Integer getNonce() {
+        return nonce;
+    }
+
+    public void setNonce(Integer nonce) {
+        this.nonce = nonce;
     }
 }

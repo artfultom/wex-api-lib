@@ -1,42 +1,43 @@
 package my.artfultom.wexapi.request;
 
+import my.artfultom.wexapi.WexClient;
 import org.apache.http.NameValuePair;
-import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public abstract class GenericRequest {
 
-    protected CloseableHttpClient httpClient;
+    protected WexClient client;
 
-    protected String url = "";
+    protected String requestUrl = "";
 
-    protected List<NameValuePair> parameters = new ArrayList<>();
+    protected Map<String, NameValuePair> parameters = new LinkedHashMap<>();
 
-    public GenericRequest(CloseableHttpClient httpClient, String url) {
-        this.httpClient = httpClient;
-        this.url = url;
+    public GenericRequest(WexClient client) {
+        this.requestUrl = client.getUrl();
+
+        this.client = client;
     }
 
     public GenericRequest append(String part) {
-        if (this.url.endsWith("/")) {
-            this.url = this.url.substring("/".length());
+        if (this.requestUrl.endsWith("/")) {
+            this.requestUrl = this.requestUrl.substring("/".length());
         }
 
         if (part.startsWith("/")) {
             part = part.substring("/".length());
         }
 
-        this.url = this.url.concat("/").concat(part);
+        this.requestUrl = this.requestUrl.concat("/").concat(part);
 
         return this;
     }
 
     public GenericRequest addParameter(String name, String value) {
-        this.parameters.add(new BasicNameValuePair(name, value));
+        this.parameters.put(name, new BasicNameValuePair(name, value));
 
         return this;
     }

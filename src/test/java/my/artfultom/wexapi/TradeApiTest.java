@@ -12,7 +12,9 @@ public class TradeApiTest {
         String key = System.getProperty("key");
         String secret = System.getProperty("secret");
 
-        System.out.print(new WexClient("https://wex.nz", key, secret).tradeApi().getInfo());
+        WexClient client = new WexClient("https://wex.nz", key, secret);
+
+        System.out.println(client.tradeApi().getInfo());
     }
 
 }
