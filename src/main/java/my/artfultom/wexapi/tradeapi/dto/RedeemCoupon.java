@@ -38,15 +38,27 @@ public class RedeemCoupon implements Serializable {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Transaction implements Serializable {
 
+        /**
+         * The amount that has been redeemed.
+         */
         @JsonProperty("couponAmount")
         private BigDecimal couponAmount;
 
+        /**
+         * The currency of the coupon that has been redeemed.
+         */
         @JsonProperty("couponCurrency")
         private String couponCurrency;
 
+        /**
+         * Transaction ID.
+         */
         @JsonProperty("transID")
-        private long transId;
+        private long transactionId;
 
+        /**
+         * Balance after the request.
+         */
         @JsonProperty("funds")
         private Map<String, BigDecimal> funds;
 
@@ -69,12 +81,12 @@ public class RedeemCoupon implements Serializable {
             this.couponCurrency = couponCurrency;
         }
 
-        public long getTransId() {
-            return transId;
+        public long getTransactionId() {
+            return transactionId;
         }
 
-        public void setTransId(long transId) {
-            this.transId = transId;
+        public void setTransactionId(long transactionId) {
+            this.transactionId = transactionId;
         }
 
         public Map<String, BigDecimal> getFunds() {

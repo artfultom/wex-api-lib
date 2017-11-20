@@ -38,9 +38,15 @@ public class CancelOrder implements Serializable {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class ReturnValue implements Serializable {
 
+        /**
+         * The ID of canceled order.
+         */
         @JsonProperty("order_id")
         private long orderId;
 
+        /**
+         * Balance upon request.
+         */
         @JsonProperty("funds")
         private Map<String, BigDecimal> funds;
 

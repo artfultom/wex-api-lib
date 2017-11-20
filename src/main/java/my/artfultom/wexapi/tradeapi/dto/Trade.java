@@ -38,15 +38,28 @@ public class Trade implements Serializable {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class ReturnValue implements Serializable {
 
+        /**
+         * The amount of currency bought/sold.
+         */
         @JsonProperty("received")
         private BigDecimal received;
 
+        /**
+         * The remaining amount of currency to be bought/sold (and the initial order amount).
+         */
         @JsonProperty("remains")
         private BigDecimal remains;
 
+        /**
+         * Is equal to 0 if the request was fully “matched” by the opposite orders, otherwise the ID of the executed
+         * order will be returned.
+         */
         @JsonProperty("order_id")
         private long orderId;
 
+        /**
+         * Balance after the request.
+         */
         @JsonProperty("funds")
         private Map<String, BigDecimal> funds;
 

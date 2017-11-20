@@ -2,10 +2,13 @@ package my.artfultom.wexapi.tradeapi.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import my.artfultom.wexapi.util.DateDeserializer;
 import my.artfultom.wexapi.util.OperationType;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -39,20 +42,36 @@ public class ActiveOrders implements Serializable {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Order implements Serializable {
 
+        /**
+         * The pair on which the order was created.
+         */
         @JsonProperty("pair")
         private String pair;
 
+        /**
+         * Order type, buy/sell.
+         */
         @JsonProperty("type")
-        private OperationType type;
+        private OperationType orderType;
 
+        /**
+         * The amount of currency to be bought/sold.
+         */
         @JsonProperty("amount")
         private BigDecimal amount;
 
+        /**
+         * Sell/Buy price.
+         */
         @JsonProperty("rate")
         private BigDecimal rate;
 
+        /**
+         * The time when the order was created.
+         */
         @JsonProperty("timestamp_created")
-        private Long timestampCreated;
+        @JsonDeserialize(using = DateDeserializer.class)
+        private LocalDateTime created;
 
         public Order() {
         }
@@ -65,12 +84,12 @@ public class ActiveOrders implements Serializable {
             this.pair = pair;
         }
 
-        public OperationType getType() {
-            return type;
+        public OperationType getOrderType() {
+            return orderType;
         }
 
-        public void setType(OperationType type) {
-            this.type = type;
+        public void setOrderType(OperationType orderType) {
+            this.orderType = orderType;
         }
 
         public BigDecimal getAmount() {
@@ -89,12 +108,12 @@ public class ActiveOrders implements Serializable {
             this.rate = rate;
         }
 
-        public Long getTimestampCreated() {
-            return timestampCreated;
+        public LocalDateTime getCreated() {
+            return created;
         }
 
-        public void setTimestampCreated(Long timestampCreated) {
-            this.timestampCreated = timestampCreated;
+        public void setCreated(LocalDateTime created) {
+            this.created = created;
         }
     }
 }

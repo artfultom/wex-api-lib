@@ -38,24 +38,33 @@ public class WithdrawCoin implements Serializable {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Transaction implements Serializable {
 
+        /**
+         * Transaction ID.
+         */
         @JsonProperty("tId")
-        private long tId;
+        private long transactionId;
 
+        /**
+         * The amount sent including commission.
+         */
         @JsonProperty("amountSent")
         private BigDecimal amountSent;
 
+        /**
+         * Balance after the request.
+         */
         @JsonProperty("funds")
         private Map<String, BigDecimal> funds;
 
         public Transaction() {
         }
 
-        public long gettId() {
-            return tId;
+        public long getTransactionId() {
+            return transactionId;
         }
 
-        public void settId(long tId) {
-            this.tId = tId;
+        public void setTransactionId(long transactionId) {
+            this.transactionId = transactionId;
         }
 
         public BigDecimal getAmountSent() {

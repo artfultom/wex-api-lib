@@ -2,15 +2,18 @@ package my.artfultom.wexapi.tradeapi.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import my.artfultom.wexapi.util.DateDeserializer;
 import my.artfultom.wexapi.util.TransactionStatus;
 import my.artfultom.wexapi.util.TransactionType;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class TransHistory implements Serializable {
+public class TransactionsHistory implements Serializable {
 
     @JsonProperty("success")
     private int success;
@@ -18,7 +21,7 @@ public class TransHistory implements Serializable {
     @JsonProperty("return")
     private Map<String, Transaction> transactions;
 
-    public TransHistory() {
+    public TransactionsHistory() {
     }
 
     public int getSuccess() {
@@ -40,33 +43,52 @@ public class TransHistory implements Serializable {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Transaction implements Serializable {
 
+        /**
+         * Transaction type. 1/2 - deposit/withdrawal, 4/5 - credit/debit.
+         */
         @JsonProperty("type")
-        private TransactionType type;
+        private TransactionType transactionType;
 
+        /**
+         * Transaction amount.
+         */
         @JsonProperty("amount")
         private BigDecimal amount;
 
+        /**
+         * Transaction currency.
+         */
         @JsonProperty("currency")
         private String currency;
 
+        /**
+         * Transaction description.
+         */
         @JsonProperty("desc")
-        private String desc;
+        private String description;
 
+        /**
+         * Transaction status. 0 - canceled/failed, 1 - waiting for acceptance, 2 - successful, 3 – not confirmed
+         */
         @JsonProperty("status")
         private TransactionStatus status;
 
+        /**
+         * Transaction time.
+         */
         @JsonProperty("timestamp")
-        private Long timestamp;
+        @JsonDeserialize(using = DateDeserializer.class)
+        private LocalDateTime timestamp;
 
         public Transaction() {
         }
 
-        public TransactionType getType() {
-            return type;
+        public TransactionType getTransactionType() {
+            return transactionType;
         }
 
-        public void setType(TransactionType type) {
-            this.type = type;
+        public void setTransactionType(TransactionType transactionType) {
+            this.transactionType = transactionType;
         }
 
         public BigDecimal getAmount() {
@@ -85,12 +107,12 @@ public class TransHistory implements Serializable {
             this.currency = currency;
         }
 
-        public String getDesc() {
-            return desc;
+        public String getDescription() {
+            return description;
         }
 
-        public void setDesc(String desc) {
-            this.desc = desc;
+        public void setDescription(String description) {
+            this.description = description;
         }
 
         public TransactionStatus getStatus() {
@@ -101,11 +123,11 @@ public class TransHistory implements Serializable {
             this.status = status;
         }
 
-        public Long getTimestamp() {
+        public LocalDateTime getTimestamp() {
             return timestamp;
         }
 
-        public void setTimestamp(Long timestamp) {
+        public void setTimestamp(LocalDateTime timestamp) {
             this.timestamp = timestamp;
         }
     }

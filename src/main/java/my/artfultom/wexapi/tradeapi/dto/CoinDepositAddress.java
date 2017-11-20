@@ -36,6 +36,9 @@ public class CoinDepositAddress implements Serializable {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class DepositAddress implements Serializable {
 
+        /**
+         * Address for deposits.
+         */
         @JsonProperty("address")
         private String address;
 

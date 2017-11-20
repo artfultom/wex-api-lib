@@ -41,15 +41,27 @@ public class GetInfo implements Serializable {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class ReturnValue implements Serializable {
 
+        /**
+         * Your account balance available for trading. Doesn’t include funds on your open orders.
+         */
         @JsonProperty("funds")
         private Map<String, BigDecimal> funds;
 
+        /**
+         * The privileges of the current API key. At this time the privilege to withdraw is not used anywhere.
+         */
         @JsonProperty("rights")
         private Map<String, Integer> rights;
 
+        /**
+         * The number of your open orders.
+         */
         @JsonProperty("open_orders")
         private int openOrders;
 
+        /**
+         * Server time (MSK).
+         */
         @JsonProperty("server_time")
         @JsonDeserialize(using = DateDeserializer.class)
         private LocalDateTime serverTime;

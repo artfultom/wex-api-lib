@@ -38,12 +38,21 @@ public class CreateCoupon implements Serializable {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Transaction implements Serializable {
 
+        /**
+         * Generated coupon.
+         */
         @JsonProperty("coupon")
         private String coupon;
 
+        /**
+         * Transaction ID.
+         */
         @JsonProperty("transID")
-        private long transId;
+        private long transactionId;
 
+        /**
+         * Balance after the request.
+         */
         @JsonProperty("funds")
         private Map<String, BigDecimal> funds;
 
@@ -58,12 +67,12 @@ public class CreateCoupon implements Serializable {
             this.coupon = coupon;
         }
 
-        public long getTransId() {
-            return transId;
+        public long getTransactionId() {
+            return transactionId;
         }
 
-        public void setTransId(long transId) {
-            this.transId = transId;
+        public void setTransactionId(long transactionId) {
+            this.transactionId = transactionId;
         }
 
         public Map<String, BigDecimal> getFunds() {

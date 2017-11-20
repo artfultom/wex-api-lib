@@ -2,10 +2,14 @@ package my.artfultom.wexapi.tradeapi.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import my.artfultom.wexapi.util.DateDeserializer;
 import my.artfultom.wexapi.util.OperationType;
+import my.artfultom.wexapi.util.OrderStatus;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -39,23 +43,48 @@ public class OrderInfo implements Serializable {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Order implements Serializable {
 
+        /**
+         * The pair on which the order was created
+         */
         @JsonProperty("pair")
         private String pair;
 
+        /**
+         * Order type, buy/sell.
+         */
         @JsonProperty("type")
-        private OperationType type;
+        private OperationType orderType;
 
+        /**
+         * The initial amount at the time of order creation.
+         */
         @JsonProperty("start_amount")
         private BigDecimal startAmount;
 
+        /**
+         * The remaining amount of currency to be bought/sold.
+         */
         @JsonProperty("amount")
         private BigDecimal amount;
 
+        /**
+         * Sell/Buy price.
+         */
         @JsonProperty("rate")
         private BigDecimal rate;
 
+        /**
+         * The time when the order was created.
+         */
         @JsonProperty("timestamp_created")
-        private Long timestampCreated;
+        @JsonDeserialize(using = DateDeserializer.class)
+        private LocalDateTime created;
+
+        /**
+         * 0 - active, 1 – executed order, 2 - canceled, 3 – canceled, but was partially executed.
+         */
+        @JsonProperty("status")
+        private OrderStatus status;
 
         public Order() {
         }
@@ -68,12 +97,12 @@ public class OrderInfo implements Serializable {
             this.pair = pair;
         }
 
-        public OperationType getType() {
-            return type;
+        public OperationType getOrderType() {
+            return orderType;
         }
 
-        public void setType(OperationType type) {
-            this.type = type;
+        public void setOrderType(OperationType orderType) {
+            this.orderType = orderType;
         }
 
         public BigDecimal getStartAmount() {
@@ -100,12 +129,20 @@ public class OrderInfo implements Serializable {
             this.rate = rate;
         }
 
-        public Long getTimestampCreated() {
-            return timestampCreated;
+        public LocalDateTime getCreated() {
+            return created;
         }
 
-        public void setTimestampCreated(Long timestampCreated) {
-            this.timestampCreated = timestampCreated;
+        public void setCreated(LocalDateTime created) {
+            this.created = created;
+        }
+
+        public OrderStatus getStatus() {
+            return status;
+        }
+
+        public void setStatus(OrderStatus status) {
+            this.status = status;
         }
     }
 }
