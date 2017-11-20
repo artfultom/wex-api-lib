@@ -76,8 +76,8 @@ public class PublicApiTest {
         PowerMockito.mockStatic(EntityUtils.class);
         PowerMockito.when(EntityUtils.toString(Mockito.any())).thenReturn("{\"pairs\":{\"btc_usd\":{}}}");
 
-        new WexClient(BASE_URL).publicApi().getInfo().execute();
-        new WexClient(BASE_URL).publicApi(99).getInfo().execute();
+        new WexClient(BASE_URL).publicApi().getInfo();
+        new WexClient(BASE_URL).publicApi(99).getInfo();
     }
 
     @Test

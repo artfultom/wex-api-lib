@@ -37,10 +37,27 @@ public class PublicApi {
         this.version = version;
     }
 
-    public InfoExecutor getInfo() throws IOException {
+    public Info getInfo() throws IOException {
         this.request.append("info");
 
-        return new InfoExecutor();
+        String responseStr = request.execute();
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        try {
+            return mapper.readValue(responseStr, Info.class);
+        } catch (JsonMappingException e) {
+            JsonNode jsonNode = mapper.readTree(responseStr);
+
+            if (jsonNode.has("success") && jsonNode.get("success").intValue() == 0) {
+                throw new UnsuccessException(
+                        jsonNode.get("success").intValue(),
+                        jsonNode.get("error").toString()
+                );
+            } else {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     public TickerExecutor getTicker(String pair) throws IOException {
@@ -93,31 +110,6 @@ public class PublicApi {
 
     public interface Executor<T> {
         T execute() throws IOException;
-    }
-
-    public class InfoExecutor implements Executor<Info> {
-
-        @Override
-        public Info execute() throws IOException {
-            String responseStr = request.execute();
-
-            ObjectMapper mapper = new ObjectMapper();
-
-            try {
-                return mapper.readValue(responseStr, Info.class);
-            } catch (JsonMappingException e) {
-                JsonNode jsonNode = mapper.readTree(responseStr);
-
-                if (jsonNode.has("success") && jsonNode.get("success").intValue() == 0) {
-                    throw new UnsuccessException(
-                            jsonNode.get("success").intValue(),
-                            jsonNode.get("error").toString()
-                    );
-                } else {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
     }
 
     public class TickerExecutor implements Executor<Map<String, Ticker>> {
