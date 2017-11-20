@@ -1,4 +1,4 @@
-package my.artfultom.wexapi;
+package my.artfultom.wexapi.tradeapi;
 
 import my.artfultom.wexapi.request.AuthorizedPostRequest;
 import my.artfultom.wexapi.util.OperationType;

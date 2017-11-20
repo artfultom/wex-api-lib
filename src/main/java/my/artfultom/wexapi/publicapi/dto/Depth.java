@@ -1,4 +1,4 @@
-package my.artfultom.wexapi.dto;
+package my.artfultom.wexapi.publicapi.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

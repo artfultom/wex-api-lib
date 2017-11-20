@@ -1,8 +1,10 @@
 package my.artfultom.wexapi;
 
 import my.artfultom.wexapi.exception.ReadOnlyException;
+import my.artfultom.wexapi.publicapi.PublicApi;
 import my.artfultom.wexapi.request.AuthorizedPostRequest;
 import my.artfultom.wexapi.request.GetRequest;
+import my.artfultom.wexapi.tradeapi.TradeApi;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 

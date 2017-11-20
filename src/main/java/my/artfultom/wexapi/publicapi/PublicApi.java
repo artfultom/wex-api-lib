@@ -1,13 +1,13 @@
-package my.artfultom.wexapi;
+package my.artfultom.wexapi.publicapi;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import my.artfultom.wexapi.dto.Depth;
-import my.artfultom.wexapi.dto.Info;
-import my.artfultom.wexapi.dto.Ticker;
-import my.artfultom.wexapi.dto.Trade;
 import my.artfultom.wexapi.exception.UnsuccessException;
+import my.artfultom.wexapi.publicapi.dto.Depth;
+import my.artfultom.wexapi.publicapi.dto.Info;
+import my.artfultom.wexapi.publicapi.dto.Ticker;
+import my.artfultom.wexapi.publicapi.dto.Trade;
 import my.artfultom.wexapi.request.GetRequest;
 
 import java.io.IOException;
