@@ -7,7 +7,7 @@ import my.artfultom.wexapi.exception.UnsuccessException;
 import my.artfultom.wexapi.request.AuthorizedPostRequest;
 import my.artfultom.wexapi.tradeapi.dto.GetInfo;
 import my.artfultom.wexapi.util.OperationType;
-import my.artfultom.wexapi.util.Order;
+import my.artfultom.wexapi.util.SortOrder;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -83,7 +83,7 @@ public class TradeApi {
             Integer count,
             Long fromId,
             Long endId,
-            Order order,
+            SortOrder sortOrder,
             Long since,
             Long end,
             String pair
@@ -93,7 +93,7 @@ public class TradeApi {
         this.request.addParameter("count", count.toString());
         this.request.addParameter("from_id", fromId.toString());
         this.request.addParameter("end_id", endId.toString());
-        this.request.addParameter("order", order.toString());
+        this.request.addParameter("order", sortOrder.toString());
         this.request.addParameter("since", since.toString());
         this.request.addParameter("end", end.toString());
         this.request.addParameter("pair", pair);
@@ -106,7 +106,7 @@ public class TradeApi {
             Integer count,
             Long fromId,
             Long endId,
-            Order order,
+            SortOrder sortOrder,
             Long since,
             Long end
     ) throws IOException {
@@ -115,7 +115,7 @@ public class TradeApi {
         this.request.addParameter("count", count.toString());
         this.request.addParameter("from_id", fromId.toString());
         this.request.addParameter("end_id", endId.toString());
-        this.request.addParameter("order", order.toString());
+        this.request.addParameter("order", sortOrder.toString());
         this.request.addParameter("since", since.toString());
         this.request.addParameter("end", end.toString());
 
