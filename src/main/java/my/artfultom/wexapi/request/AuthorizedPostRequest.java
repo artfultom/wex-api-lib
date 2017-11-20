@@ -2,7 +2,6 @@ package my.artfultom.wexapi.request;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -15,13 +14,9 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Collectors;
 
 public class AuthorizedPostRequest extends GenericRequest {
-
-    private List<NameValuePair> postData = new ArrayList<>();
 
     private String key;
 
@@ -39,27 +34,43 @@ public class AuthorizedPostRequest extends GenericRequest {
 
     @Override
     public String execute() throws IOException {
-        HttpPost httpPost = new HttpPost(this.url);
+        String result;
 
-        httpPost.setEntity(new UrlEncodedFormEntity(postData, "UTF-8"));
+        for (int i = 0; i < 10; i++) {
+            if (this.nonce != null) {
+                this.addParameter("nonce", this.nonce.toString());
+            }
 
-        httpPost.addHeader("Key", this.key);
+            HttpPost httpPost = new HttpPost(this.url);
 
-        String postDataStr = String.join(
-                "&",
-                postData.stream().map(item -> item.getName() + "=" + item.getValue()).collect(Collectors.toList())
-        );
+            httpPost.setEntity(new UrlEncodedFormEntity(this.parameters, "UTF-8"));
 
-        String sign = this.getHmacSHA512(postDataStr, this.secret);
+            httpPost.addHeader("Key", this.key);
 
-        httpPost.addHeader("Sign", sign);
+            String postDataStr = String.join(
+                    "&",
+                    this.parameters.stream().map(item -> item.getName() + "=" + item.getValue()).collect(Collectors.toList())
+            );
 
-        HttpResponse response = httpClient.execute(httpPost);
-        HttpEntity entity = response.getEntity();
+            String sign = this.getHmacSHA512(postDataStr, this.secret);
 
-        return EntityUtils.toString(entity);
+            httpPost.addHeader("Sign", sign);
 
-        // {"success":0,"error":"invalid nonce parameter; on key:212372980, you sent:'', you should send:212372981"}
+            HttpResponse response = httpClient.execute(httpPost);
+            HttpEntity entity = response.getEntity();
+
+            result = EntityUtils.toString(entity);
+
+            if (result.contains("invalid nonce parameter")) {
+                this.nonce = Integer.valueOf(result.split("you should send:")[1].replaceAll("[\\D]", ""));
+            } else {
+                this.nonce++;
+
+                return result;
+            }
+        }
+
+        throw new RuntimeException("Invalid nonce parameter: " + this.nonce + "!");
     }
 
     private String getHmacSHA512(String str, String secret) {

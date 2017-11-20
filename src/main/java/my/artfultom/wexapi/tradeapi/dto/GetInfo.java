@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import java.util.Map;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class GetOrder implements Serializable {
+public class GetInfo implements Serializable {
 
     @JsonProperty("success")
     private int success;
@@ -16,7 +16,7 @@ public class GetOrder implements Serializable {
     @JsonProperty("return")
     private ReturnValue returnValue;
 
-    public GetOrder() {
+    public GetInfo() {
     }
 
     public int getSuccess() {
