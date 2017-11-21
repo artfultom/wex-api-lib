@@ -1,6 +1,6 @@
 package my.artfultom.wexapi.util;
 
-public enum OperationType {
+public enum TradeType {
     BUY,
     SELL;
 

@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import my.artfultom.wexapi.exception.UnsuccessException;
 import my.artfultom.wexapi.request.AuthorizedPostRequest;
 import my.artfultom.wexapi.tradeapi.dto.GetInfo;
-import my.artfultom.wexapi.util.OperationType;
+import my.artfultom.wexapi.util.OrderType;
 import my.artfultom.wexapi.util.SortOrder;
 
 import java.io.IOException;
@@ -47,7 +47,7 @@ public class TradeApi {
         }
     }
 
-    public String trade(String pair, OperationType type, BigDecimal rate, BigDecimal amount) throws IOException {
+    public String trade(String pair, OrderType type, BigDecimal rate, BigDecimal amount) throws IOException {
         this.request.addParameter("method", "Trade");
         this.request.addParameter("pair", pair);
         this.request.addParameter("type", type.toString());

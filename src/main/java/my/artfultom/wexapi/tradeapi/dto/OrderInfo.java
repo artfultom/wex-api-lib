@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import my.artfultom.wexapi.util.DateDeserializer;
-import my.artfultom.wexapi.util.OperationType;
 import my.artfultom.wexapi.util.OrderStatus;
+import my.artfultom.wexapi.util.OrderType;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -53,7 +53,7 @@ public class OrderInfo implements Serializable {
          * Order type, buy/sell.
          */
         @JsonProperty("type")
-        private OperationType orderType;
+        private OrderType orderType;
 
         /**
          * The initial amount at the time of order creation.
@@ -97,11 +97,11 @@ public class OrderInfo implements Serializable {
             this.pair = pair;
         }
 
-        public OperationType getOrderType() {
+        public OrderType getOrderType() {
             return orderType;
         }
 
-        public void setOrderType(OperationType orderType) {
+        public void setOrderType(OrderType orderType) {
             this.orderType = orderType;
         }
 
