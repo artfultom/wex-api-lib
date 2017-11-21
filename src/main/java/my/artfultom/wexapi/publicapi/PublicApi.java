@@ -16,21 +16,21 @@ import java.util.*;
 public class PublicApi {
 
     private static final int PUBLIC_API_DEFAULT_VERSION = 3;
-    private static final String PUBLIC_API_PREFIX = "api";
+    private static final String PUBLIC_API_SUFFIX = "api";
 
     private int version = PUBLIC_API_DEFAULT_VERSION;
 
     private GetRequest request;
 
     public PublicApi(GetRequest request) {
-        request.append(PUBLIC_API_PREFIX);
+        request.append(PUBLIC_API_SUFFIX);
         request.append(String.valueOf(version));
 
         this.request = request;
     }
 
     public PublicApi(GetRequest request, int version) {
-        request.append(PUBLIC_API_PREFIX);
+        request.append(PUBLIC_API_SUFFIX);
         request.append(String.valueOf(version));
 
         this.request = request;

@@ -12,12 +12,12 @@ import java.math.BigDecimal;
 
 public class TradeApi {
 
-    private static final String TRADE_API_PREFIX = "tapi";
+    private static final String TRADE_API_SUFFIX = "tapi";
 
     private AuthorizedPostRequest request;
 
     public TradeApi(AuthorizedPostRequest request) {
-        request.append(TRADE_API_PREFIX);
+        request.append(TRADE_API_SUFFIX);
 
         this.request = request;
     }
