@@ -1,6 +1,7 @@
 package my.artfultom.wexapi.request;
 
 import my.artfultom.wexapi.WexClient;
+import my.artfultom.wexapi.exception.NonceInvalidException;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -67,7 +68,7 @@ public class AuthorizedPostRequest extends GenericRequest {
             }
         }
 
-        throw new RuntimeException("Invalid nonce parameter: " + nonce + "!");
+        throw new NonceInvalidException(nonce);
     }
 
     private String getHmacSHA512(String str, String secret) {
