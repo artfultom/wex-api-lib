@@ -13,6 +13,9 @@ public class WithdrawCoin implements Serializable {
     @JsonProperty("success")
     private int success;
 
+    @JsonProperty("error")
+    private String error;
+
     @JsonProperty("return")
     private Transaction transaction;
 
@@ -25,6 +28,14 @@ public class WithdrawCoin implements Serializable {
 
     public void setSuccess(int success) {
         this.success = success;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
     }
 
     public Transaction getTransaction() {

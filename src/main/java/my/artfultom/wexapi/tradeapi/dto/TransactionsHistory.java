@@ -18,6 +18,9 @@ public class TransactionsHistory implements Serializable {
     @JsonProperty("success")
     private int success;
 
+    @JsonProperty("error")
+    private String error;
+
     @JsonProperty("return")
     private Map<String, Transaction> transactions;
 
@@ -30,6 +33,14 @@ public class TransactionsHistory implements Serializable {
 
     public void setSuccess(int success) {
         this.success = success;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
     }
 
     public Map<String, Transaction> getTransactions() {

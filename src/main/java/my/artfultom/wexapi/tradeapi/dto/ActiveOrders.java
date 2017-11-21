@@ -17,6 +17,9 @@ public class ActiveOrders implements Serializable {
     @JsonProperty("success")
     private int success;
 
+    @JsonProperty("error")
+    private String error;
+
     @JsonProperty("return")
     private Map<String, Order> orders;
 
@@ -29,6 +32,14 @@ public class ActiveOrders implements Serializable {
 
     public void setSuccess(int success) {
         this.success = success;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
     }
 
     public Map<String, Order> getOrders() {

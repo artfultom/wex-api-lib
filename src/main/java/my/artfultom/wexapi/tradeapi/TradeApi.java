@@ -1,11 +1,9 @@
 package my.artfultom.wexapi.tradeapi;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import my.artfultom.wexapi.exception.UnsuccessException;
 import my.artfultom.wexapi.request.AuthorizedPostRequest;
-import my.artfultom.wexapi.tradeapi.dto.GetInfo;
+import my.artfultom.wexapi.tradeapi.dto.*;
 import my.artfultom.wexapi.util.OrderType;
 import my.artfultom.wexapi.util.SortOrder;
 
@@ -34,51 +32,74 @@ public class TradeApi {
         try {
             return mapper.readValue(responseStr, GetInfo.class);
         } catch (JsonMappingException e) {
-            JsonNode jsonNode = mapper.readTree(responseStr);
-
-            if (jsonNode.has("success") && jsonNode.get("success").intValue() == 0) {
-                throw new UnsuccessException(
-                        jsonNode.get("success").intValue(),
-                        jsonNode.get("error").toString()
-                );
-            } else {
-                throw new RuntimeException(e);
-            }
+            throw new RuntimeException(e);
         }
     }
 
-    public String trade(String pair, OrderType type, BigDecimal rate, BigDecimal amount) throws IOException {
+    public Trade trade(String pair, OrderType type, BigDecimal rate, BigDecimal amount) throws IOException {
         this.request.addParameter("method", "Trade");
         this.request.addParameter("pair", pair);
         this.request.addParameter("type", type.toString());
         this.request.addParameter("rate", rate.toString());
         this.request.addParameter("amount", amount.toString());
 
-        return this.request.execute();
+        String responseStr = this.request.execute();
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        try {
+            return mapper.readValue(responseStr, Trade.class);
+        } catch (JsonMappingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public String activeOrders(String pair) throws IOException {
+    public ActiveOrders activeOrders(String pair) throws IOException {
         this.request.addParameter("method", "ActiveOrders");
         this.request.addParameter("pair", pair);
 
-        return this.request.execute();
+        String responseStr = this.request.execute();
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        try {
+            return mapper.readValue(responseStr, ActiveOrders.class);
+        } catch (JsonMappingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public String orderInfo(Long orderId) throws IOException {
+    public OrderInfo orderInfo(Long orderId) throws IOException {
         this.request.addParameter("method", "OrderInfo");
         this.request.addParameter("order_id", orderId.toString());
 
-        return this.request.execute();
+        String responseStr = this.request.execute();
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        try {
+            return mapper.readValue(responseStr, OrderInfo.class);
+        } catch (JsonMappingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public String cancelOrder(Long orderId) throws IOException {
+    public CancelOrder cancelOrder(Long orderId) throws IOException {
         this.request.addParameter("method", "CancelOrder");
         this.request.addParameter("order_id", orderId.toString());
 
-        return this.request.execute();
+        String responseStr = this.request.execute();
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        try {
+            return mapper.readValue(responseStr, CancelOrder.class);
+        } catch (JsonMappingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public String tradeHistory(
+    public TradeHistory tradeHistory(
             Long from,
             Integer count,
             Long fromId,
@@ -98,10 +119,18 @@ public class TradeApi {
         this.request.addParameter("end", end.toString());
         this.request.addParameter("pair", pair);
 
-        return this.request.execute();
+        String responseStr = this.request.execute();
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        try {
+            return mapper.readValue(responseStr, TradeHistory.class);
+        } catch (JsonMappingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public String transHistory(
+    public TransactionsHistory transHistory(
             Long from,
             Integer count,
             Long fromId,
@@ -119,38 +148,78 @@ public class TradeApi {
         this.request.addParameter("since", since.toString());
         this.request.addParameter("end", end.toString());
 
-        return this.request.execute();
+        String responseStr = this.request.execute();
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        try {
+            return mapper.readValue(responseStr, TransactionsHistory.class);
+        } catch (JsonMappingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public String coinDepositAddress(String coinName) throws IOException {
+    public CoinDepositAddress coinDepositAddress(String coinName) throws IOException {
         this.request.addParameter("method", "CoinDepositAddress");
         this.request.addParameter("coinName", coinName);
 
-        return this.request.execute();
+        String responseStr = this.request.execute();
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        try {
+            return mapper.readValue(responseStr, CoinDepositAddress.class);
+        } catch (JsonMappingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public String withdrawCoin(String coinName, BigDecimal amount, String address) throws IOException {
+    public WithdrawCoin withdrawCoin(String coinName, BigDecimal amount, String address) throws IOException {
         this.request.addParameter("method", "WithdrawCoin");
         this.request.addParameter("coinName", coinName);
         this.request.addParameter("amount", amount.toString());
         this.request.addParameter("address", address);
 
-        return this.request.execute();
+        String responseStr = this.request.execute();
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        try {
+            return mapper.readValue(responseStr, WithdrawCoin.class);
+        } catch (JsonMappingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public String createCoupon(String currency, BigDecimal amount, String receiver) throws IOException {
+    public CreateCoupon createCoupon(String currency, BigDecimal amount, String receiver) throws IOException {
         this.request.addParameter("method", "CreateCoupon");
         this.request.addParameter("currency", currency);
         this.request.addParameter("amount", amount.toString());
         this.request.addParameter("receiver", receiver);
 
-        return this.request.execute();
+        String responseStr = this.request.execute();
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        try {
+            return mapper.readValue(responseStr, CreateCoupon.class);
+        } catch (JsonMappingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public String redeemCoupon(String coupon) throws IOException {
+    public RedeemCoupon redeemCoupon(String coupon) throws IOException {
         this.request.addParameter("method", "RedeemCoupon");
         this.request.addParameter("coupon", coupon);
 
-        return this.request.execute();
+        String responseStr = this.request.execute();
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        try {
+            return mapper.readValue(responseStr, RedeemCoupon.class);
+        } catch (JsonMappingException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

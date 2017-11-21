@@ -17,6 +17,9 @@ public class TradeHistory implements Serializable {
     @JsonProperty("success")
     private int success;
 
+    @JsonProperty("error")
+    private String error;
+
     @JsonProperty("return")
     private Map<String, Trade> trades;
 
@@ -29,6 +32,14 @@ public class TradeHistory implements Serializable {
 
     public void setSuccess(int success) {
         this.success = success;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
     }
 
     public Map<String, Trade> getTrades() {
