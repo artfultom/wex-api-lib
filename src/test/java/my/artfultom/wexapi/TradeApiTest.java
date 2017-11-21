@@ -1,5 +1,6 @@
 package my.artfultom.wexapi;
 
+import my.artfultom.wexapi.exception.ReadOnlyException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,7 +16,15 @@ public class TradeApiTest {
     @Before
     public void setup() {
         Assert.assertNotNull("You must set -Dkey parameter!", key);
-        Assert.assertNotNull("You must set -Dsecret parameter!" ,secret);
+        Assert.assertNotNull("You must set -Dsecret parameter!", secret);
+
+        try {
+            new WexClient("https://wex.nz").tradeApi();
+
+            Assert.fail("Expected an ReadOnlyException to be thrown");
+        } catch (ReadOnlyException e) {
+            Assert.assertNotNull(e);
+        }
     }
 
     @Test
