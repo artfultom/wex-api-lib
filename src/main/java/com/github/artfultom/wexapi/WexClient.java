@@ -2,6 +2,7 @@ package com.github.artfultom.wexapi;
 
 import com.github.artfultom.wexapi.exception.ReadOnlyException;
 import com.github.artfultom.wexapi.publicapi.PublicApi;
+import com.github.artfultom.wexapi.pushapi.PushApi;
 import com.github.artfultom.wexapi.request.AuthorizedPostRequest;
 import com.github.artfultom.wexapi.request.GetRequest;
 import com.github.artfultom.wexapi.tradeapi.TradeApi;
@@ -57,6 +58,14 @@ public class WexClient implements Closeable {
         }
 
         return new TradeApi(new AuthorizedPostRequest(this));
+    }
+
+    public PushApi pushApi() {
+        return new PushApi();
+    }
+
+    public PushApi pushApi(String cluster, String key) {
+        return new PushApi(cluster, key);
     }
 
     @Override

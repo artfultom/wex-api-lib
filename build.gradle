@@ -9,6 +9,7 @@ dependencies {
     api 'com.fasterxml.jackson.core:jackson-core:2.9.2'
     api 'com.fasterxml.jackson.core:jackson-annotations:2.9.2'
     api 'com.fasterxml.jackson.core:jackson-databind:2.9.2'
+    api 'com.pusher:pusher-java-client:1.5.0'
 
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.powermock:powermock-module-junit4:1.7.3'
