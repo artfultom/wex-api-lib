@@ -99,109 +99,16 @@ public class TradeApi {
         }
     }
 
-    public TradeHistory tradeHistory(
-            Long from,
-            Integer count,
-            Long fromId,
-            Long endId,
-            SortOrder sortOrder,
-            Long since,
-            Long end,
-            String pair
-    ) throws IOException {
+    public TradeHistoryExecutor tradeHistory() throws IOException {
         this.request.addParameter("method", "TradeHistory");
 
-        if (from != null) {
-            this.request.addParameter("from", from.toString());
-        }
-
-        if (count != null) {
-            this.request.addParameter("count", count.toString());
-        }
-
-        if (fromId != null) {
-            this.request.addParameter("from_id", fromId.toString());
-        }
-
-        if (endId != null) {
-            this.request.addParameter("end_id", endId.toString());
-        }
-
-        if (sortOrder != null) {
-            this.request.addParameter("order", sortOrder.toString());
-        }
-
-        if (since != null) {
-            this.request.addParameter("since", since.toString());
-        }
-
-        if (end != null) {
-            this.request.addParameter("end", end.toString());
-        }
-
-        if (pair != null) {
-            this.request.addParameter("pair", pair);
-        }
-
-        String responseStr = this.request.execute();
-
-        ObjectMapper mapper = new ObjectMapper();
-
-        try {
-            return mapper.readValue(responseStr, TradeHistory.class);
-        } catch (JsonMappingException e) {
-            throw new RuntimeException(e);
-        }
+        return new TradeHistoryExecutor();
     }
 
-    public TransactionsHistory transHistory(
-            Long from,
-            Integer count,
-            Long fromId,
-            Long endId,
-            SortOrder sortOrder,
-            Long since,
-            Long end
-    ) throws IOException {
+    public TransactionsHistoryExecutor transHistory() throws IOException {
         this.request.addParameter("method", "TransHistory");
 
-        if (from != null) {
-            this.request.addParameter("from", from.toString());
-        }
-
-        if (count != null) {
-            this.request.addParameter("count", count.toString());
-        }
-
-        if (fromId != null) {
-            this.request.addParameter("from_id", fromId.toString());
-        }
-
-        if (endId != null) {
-            this.request.addParameter("end_id", endId.toString());
-        }
-
-        if (sortOrder != null) {
-            this.request.addParameter("order", sortOrder.toString());
-        }
-
-        if (since != null) {
-            this.request.addParameter("since", since.toString());
-        }
-
-        if (end != null) {
-            this.request.addParameter("end", end.toString());
-        }
-
-        String responseStr = this.request.execute();
-
-        ObjectMapper mapper = new ObjectMapper();
-
-        try {
-            return mapper.readValue(responseStr, TransactionsHistory.class);
-        } catch (JsonMappingException e) {
-            throw new RuntimeException(e);
-        }
+        return new TransactionsHistoryExecutor();
     }
 
     public CoinDepositAddress coinDepositAddress(String coinName) throws IOException {
@@ -265,6 +172,132 @@ public class TradeApi {
             return mapper.readValue(responseStr, RedeemCoupon.class);
         } catch (JsonMappingException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public interface Executor<T> {
+        T execute() throws IOException;
+    }
+
+    public class TradeHistoryExecutor implements Executor<TradeHistory> {
+
+        public TradeHistoryExecutor from(Long offset) {
+            request.addParameter("from", offset.toString());
+
+            return this;
+        }
+
+        public TradeHistoryExecutor count(Integer limit) {
+            request.addParameter("count", limit.toString());
+
+            return this;
+        }
+
+        public TradeHistoryExecutor fromId(Long fromId) {
+            request.addParameter("from_id", fromId.toString());
+
+            return this;
+        }
+
+        public TradeHistoryExecutor endId(Long endId) {
+            request.addParameter("end_id", endId.toString());
+
+            return this;
+        }
+
+        public TradeHistoryExecutor order(SortOrder sortOrder) {
+            request.addParameter("order", sortOrder.toString());
+
+            return this;
+        }
+
+        public TradeHistoryExecutor since(Long unixTime) {
+            request.addParameter("since", unixTime.toString());
+
+            return this;
+        }
+
+        public TradeHistoryExecutor end(Long unixTime) {
+            request.addParameter("end", unixTime.toString());
+
+            return this;
+        }
+
+        public TradeHistoryExecutor pair(String pair) {
+            request.addParameter("pair", pair);
+
+            return this;
+        }
+
+        @Override
+        public TradeHistory execute() throws IOException {
+            String responseStr = request.execute();
+
+            ObjectMapper mapper = new ObjectMapper();
+
+            try {
+                return mapper.readValue(responseStr, TradeHistory.class);
+            } catch (JsonMappingException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public class TransactionsHistoryExecutor implements Executor<TransactionsHistory> {
+
+        public TransactionsHistoryExecutor from(Long offset) {
+            request.addParameter("from", offset.toString());
+
+            return this;
+        }
+
+        public TransactionsHistoryExecutor count(Integer limit) {
+            request.addParameter("count", limit.toString());
+
+            return this;
+        }
+
+        public TransactionsHistoryExecutor fromId(Long fromId) {
+            request.addParameter("from_id", fromId.toString());
+
+            return this;
+        }
+
+        public TransactionsHistoryExecutor endId(Long endId) {
+            request.addParameter("end_id", endId.toString());
+
+            return this;
+        }
+
+        public TransactionsHistoryExecutor order(SortOrder sortOrder) {
+            request.addParameter("order", sortOrder.toString());
+
+            return this;
+        }
+
+        public TransactionsHistoryExecutor since(Long unixTime) {
+            request.addParameter("since", unixTime.toString());
+
+            return this;
+        }
+
+        public TransactionsHistoryExecutor end(Long unixTime) {
+            request.addParameter("end", unixTime.toString());
+
+            return this;
+        }
+
+        @Override
+        public TransactionsHistory execute() throws IOException {
+            String responseStr = request.execute();
+
+            ObjectMapper mapper = new ObjectMapper();
+
+            try {
+                return mapper.readValue(responseStr, TransactionsHistory.class);
+            } catch (JsonMappingException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }
