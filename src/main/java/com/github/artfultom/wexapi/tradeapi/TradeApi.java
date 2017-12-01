@@ -39,7 +39,7 @@ public class TradeApi {
     public Trade trade(String pair, OrderType type, BigDecimal rate, BigDecimal amount) throws IOException {
         this.request.addParameter("method", "Trade");
         this.request.addParameter("pair", pair);
-        this.request.addParameter("type", type.toString());
+        this.request.addParameter("type", type.name().toLowerCase());
         this.request.addParameter("rate", rate.toString());
         this.request.addParameter("amount", amount.toString());
 
@@ -110,14 +110,38 @@ public class TradeApi {
             String pair
     ) throws IOException {
         this.request.addParameter("method", "TradeHistory");
-        this.request.addParameter("from", from.toString());
-        this.request.addParameter("count", count.toString());
-        this.request.addParameter("from_id", fromId.toString());
-        this.request.addParameter("end_id", endId.toString());
-        this.request.addParameter("order", sortOrder.toString());
-        this.request.addParameter("since", since.toString());
-        this.request.addParameter("end", end.toString());
-        this.request.addParameter("pair", pair);
+
+        if (from != null) {
+            this.request.addParameter("from", from.toString());
+        }
+
+        if (count != null) {
+            this.request.addParameter("count", count.toString());
+        }
+
+        if (fromId != null) {
+            this.request.addParameter("from_id", fromId.toString());
+        }
+
+        if (endId != null) {
+            this.request.addParameter("end_id", endId.toString());
+        }
+
+        if (sortOrder != null) {
+            this.request.addParameter("order", sortOrder.toString());
+        }
+
+        if (since != null) {
+            this.request.addParameter("since", since.toString());
+        }
+
+        if (end != null) {
+            this.request.addParameter("end", end.toString());
+        }
+
+        if (pair != null) {
+            this.request.addParameter("pair", pair);
+        }
 
         String responseStr = this.request.execute();
 
@@ -140,13 +164,34 @@ public class TradeApi {
             Long end
     ) throws IOException {
         this.request.addParameter("method", "TransHistory");
-        this.request.addParameter("from", from.toString());
-        this.request.addParameter("count", count.toString());
-        this.request.addParameter("from_id", fromId.toString());
-        this.request.addParameter("end_id", endId.toString());
-        this.request.addParameter("order", sortOrder.toString());
-        this.request.addParameter("since", since.toString());
-        this.request.addParameter("end", end.toString());
+
+        if (from != null) {
+            this.request.addParameter("from", from.toString());
+        }
+
+        if (count != null) {
+            this.request.addParameter("count", count.toString());
+        }
+
+        if (fromId != null) {
+            this.request.addParameter("from_id", fromId.toString());
+        }
+
+        if (endId != null) {
+            this.request.addParameter("end_id", endId.toString());
+        }
+
+        if (sortOrder != null) {
+            this.request.addParameter("order", sortOrder.toString());
+        }
+
+        if (since != null) {
+            this.request.addParameter("since", since.toString());
+        }
+
+        if (end != null) {
+            this.request.addParameter("end", end.toString());
+        }
 
         String responseStr = this.request.execute();
 
