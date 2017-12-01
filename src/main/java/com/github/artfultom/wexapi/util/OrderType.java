@@ -1,11 +1,12 @@
 package com.github.artfultom.wexapi.util;
 
-public enum OrderType {
-    BUY,
-    SELL;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-    @Override
-    public String toString() {
-        return super.toString().toLowerCase();
-    }
+public enum OrderType {
+
+    @JsonProperty("buy")
+    BUY,
+
+    @JsonProperty("sell")
+    SELL;
 }
