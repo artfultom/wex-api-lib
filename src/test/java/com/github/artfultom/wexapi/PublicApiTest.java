@@ -1,5 +1,6 @@
 package com.github.artfultom.wexapi;
 
+import com.github.artfultom.wexapi.publicapi.dto.Info;
 import com.github.artfultom.wexapi.request.GetRequest;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -20,6 +21,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
@@ -74,10 +76,53 @@ public class PublicApiTest {
                 });
 
         PowerMockito.mockStatic(EntityUtils.class);
-        PowerMockito.when(EntityUtils.toString(Mockito.any())).thenReturn("{\"pairs\":{\"btc_usd\":{}}}");
 
-        new WexClient(BASE_URL).publicApi().getInfo();
-        new WexClient(BASE_URL).publicApi(99).getInfo();
+        String response = "" +
+                "{\n" +
+                "\"server_time\":1370814956,\n" +
+                "\"pairs\":\n" +
+                "{\n" +
+                "\"btc_usd\":\n" +
+                "{\n" +
+                "\"decimal_places\":3,\n" +
+                "\"min_price\":0.1,\n" +
+                "\"max_price\":400,\n" +
+                "\"min_amount\":0.01,\n" +
+                "\"hidden\":0,\n" +
+                "\"fee\":0.2\n" +
+                "}\n" +
+                "}\n" +
+                "}";
+
+        PowerMockito.when(EntityUtils.toString(Mockito.any())).thenReturn(response);
+
+        Info info1 = new WexClient(BASE_URL).publicApi().getInfo();
+
+        Assert.assertTrue(info1.getServerTime() > 0);
+        Assert.assertFalse(info1.getPairs().isEmpty());
+
+        Info.Pair pair1 = info1.getPairs().get("btc_usd");
+        Assert.assertNotNull(pair1);
+        Assert.assertEquals(pair1.getDecimalPlaces(), 3);
+        Assert.assertEquals(pair1.getMinPrice(), BigDecimal.valueOf(0.1));
+        Assert.assertEquals(pair1.getMaxPrice(), BigDecimal.valueOf(400));
+        Assert.assertEquals(pair1.getMinAmount(), BigDecimal.valueOf(0.01));
+        Assert.assertEquals(pair1.getHidden(), 0);
+        Assert.assertEquals(pair1.getFee(), BigDecimal.valueOf(0.2));
+
+        Info info2 = new WexClient(BASE_URL).publicApi(99).getInfo();
+
+        Assert.assertTrue(info2.getServerTime() > 0);
+        Assert.assertFalse(info2.getPairs().isEmpty());
+
+        Info.Pair pair2 = info2.getPairs().get("btc_usd");
+        Assert.assertNotNull(pair2);
+        Assert.assertEquals(pair2.getDecimalPlaces(), 3);
+        Assert.assertEquals(pair2.getMinPrice(), BigDecimal.valueOf(0.1));
+        Assert.assertEquals(pair2.getMaxPrice(), BigDecimal.valueOf(400));
+        Assert.assertEquals(pair2.getMinAmount(), BigDecimal.valueOf(0.01));
+        Assert.assertEquals(pair2.getHidden(), 0);
+        Assert.assertEquals(pair2.getFee(), BigDecimal.valueOf(0.2));
     }
 
     @Test
