@@ -92,7 +92,7 @@ public class OrderInfo implements Serializable {
         private LocalDateTime created;
 
         /**
-         * 0 - active, 1 – executed order, 2 - canceled, 3 – canceled, but was partially executed.
+         * 0 - active, 1 - executed order, 2 - canceled, 3 - canceled, but was partially executed.
          */
         @JsonProperty("status")
         private OrderStatus status;

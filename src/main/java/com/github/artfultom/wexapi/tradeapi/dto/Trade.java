@@ -62,7 +62,7 @@ public class Trade implements Serializable {
         private BigDecimal remains;
 
         /**
-         * Is equal to 0 if the request was fully “matched” by the opposite orders, otherwise the ID of the executed
+         * Is equal to 0 if the request was fully "matched" by the opposite orders, otherwise the ID of the executed
          * order will be returned.
          */
         @JsonProperty("order_id")

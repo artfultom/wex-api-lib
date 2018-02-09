@@ -53,7 +53,7 @@ public class GetInfo implements Serializable {
     public static class ReturnValue implements Serializable {
 
         /**
-         * Your account balance available for trading. Doesn’t include funds on your open orders.
+         * Your account balance available for trading. Doesn't include funds on your open orders.
          */
         @JsonProperty("funds")
         private Map<String, BigDecimal> funds;

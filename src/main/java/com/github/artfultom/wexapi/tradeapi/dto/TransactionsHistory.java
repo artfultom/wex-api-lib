@@ -79,7 +79,7 @@ public class TransactionsHistory implements Serializable {
         private String description;
 
         /**
-         * Transaction status. 0 - canceled/failed, 1 - waiting for acceptance, 2 - successful, 3 – not confirmed
+         * Transaction status. 0 - canceled/failed, 1 - waiting for acceptance, 2 - successful, 3 - not confirmed
          */
         @JsonProperty("status")
         private TransactionStatus status;
