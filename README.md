@@ -1,6 +1,6 @@
 # Installation
 
-Depository - http://repo1.maven.org/maven2/com/github/artfultom/wexapi/.
+Repository - http://repo1.maven.org/maven2/com/github/artfultom/wexapi/.
 
 ### Apache Maven
 ```
