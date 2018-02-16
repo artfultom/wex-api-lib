@@ -22,7 +22,7 @@ public class WexClient implements Closeable {
 
     private String secret;
 
-    private Integer nonce = 0;
+    private Integer nonce = 1;
 
     public WexClient(String url) {
         this.httpClient = HttpClients.createDefault();
