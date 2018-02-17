@@ -2,6 +2,7 @@ package com.github.artfultom.wexapi;
 
 import com.github.artfultom.wexapi.exception.ReadOnlyException;
 import com.github.artfultom.wexapi.request.AuthorizedPostRequest;
+import com.github.artfultom.wexapi.tradeapi.dto.GetInfo;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -20,6 +21,10 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 /**
  * -Dkey= -Dsecret=
@@ -65,21 +70,52 @@ public class TradeApiTest {
                 .whenNew(HttpPost.class).withArguments(Mockito.anyString())
                 .thenAnswer((Answer<HttpPost>) invocation -> {
                     Assert.assertEquals(
-                            "Wrong request:",
+                            "Wrong request!",
                             invocation.getArgument(0), "https://wex.nz/tapi"
                     );
 
                     return httpPost;
                 });
 
-        // TODO check body
-
         PowerMockito.mockStatic(EntityUtils.class);
-        PowerMockito.when(EntityUtils.toString(Mockito.any())).thenReturn("{\"success\":1,\"return\":{}}");
+        PowerMockito.when(EntityUtils.toString(Mockito.any())).thenReturn("" +
+                "{" +
+                "\"success\":1," +
+                "\"return\":" +
+                "{" +
+                "\"funds\":{\"usd\":0.1}," +
+                "\"rights\":{\"info\":1,\"trade\":1,\"withdraw\":0}," +
+                "\"open_orders\":0," +
+                "\"server_time\":1518789451" +
+                "}" +
+                "}");
 
         WexClient client = new WexClient("https://wex.nz", key, secret);
 
-        client.tradeApi().getInfo();
-    }
+        GetInfo info = client.tradeApi().getInfo();
 
+        Assert.assertNotNull(info);
+        Assert.assertEquals(info.getSuccess(), 1);
+        Assert.assertNull(info.getError());
+
+        Assert.assertNotNull(info.getReturnValue());
+        Assert.assertNotNull(info.getReturnValue().getFunds());
+        Assert.assertTrue(info.getReturnValue().getFunds().size() == 1);
+        Assert.assertNotNull(info.getReturnValue().getFunds().get("usd"));
+        Assert.assertEquals(info.getReturnValue().getFunds().get("usd"), BigDecimal.valueOf(0.1));
+
+        Assert.assertNotNull(info.getReturnValue().getRights());
+        Assert.assertTrue(info.getReturnValue().getRights().size() == 3);
+        Assert.assertTrue(info.getReturnValue().getRights().get("info") == 1);
+        Assert.assertTrue(info.getReturnValue().getRights().get("trade") == 1);
+        Assert.assertTrue(info.getReturnValue().getRights().get("withdraw") == 0);
+
+        Assert.assertEquals(info.getReturnValue().getOpenOrders(), 0);
+
+        LocalDateTime dateTime = LocalDateTime.ofInstant(
+                Instant.ofEpochMilli(1518789451L * 1000),
+                ZoneId.systemDefault()
+        ); // TODO zoneId
+        Assert.assertEquals(info.getReturnValue().getServerTime(), dateTime);
+    }
 }
