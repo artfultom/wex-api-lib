@@ -2,16 +2,20 @@ package com.github.artfultom.wexapi.publicapi.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.github.artfultom.wexapi.util.DateDeserializer;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Info {
 
     @JsonProperty("server_time")
-    private long serverTime;
+    @JsonDeserialize(using = DateDeserializer.class)
+    private LocalDateTime serverTime;
 
     @JsonProperty("pairs")
     private Map<String, Pair> pairs;
@@ -19,11 +23,11 @@ public class Info {
     public Info() {
     }
 
-    public long getServerTime() {
+    public LocalDateTime getServerTime() {
         return serverTime;
     }
 
-    public void setServerTime(long serverTime) {
+    public void setServerTime(LocalDateTime serverTime) {
         this.serverTime = serverTime;
     }
 

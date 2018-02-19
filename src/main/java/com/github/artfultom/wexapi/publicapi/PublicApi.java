@@ -15,52 +15,44 @@ import java.util.*;
 
 public class PublicApi {
 
-    private static final int PUBLIC_API_DEFAULT_VERSION = 3;
-    private static final String PUBLIC_API_SUFFIX = "api";
-
-    private int version = PUBLIC_API_DEFAULT_VERSION;
+    private static final String PUBLIC_API_SUFFIX = "api/3";
 
     private GetRequest request;
 
     public PublicApi(GetRequest request) {
         request.append(PUBLIC_API_SUFFIX);
-        request.append(String.valueOf(version));
 
         this.request = request;
     }
 
-    public PublicApi(GetRequest request, int version) {
-        request.append(PUBLIC_API_SUFFIX);
-        request.append(String.valueOf(version));
-
-        this.request = request;
-        this.version = version;
-    }
-
-    public Info getInfo() throws IOException {
+    public Info getInfo() {
         this.request.append("info");
 
-        String responseStr = request.execute();
-
-        ObjectMapper mapper = new ObjectMapper();
-
         try {
-            return mapper.readValue(responseStr, Info.class);
-        } catch (JsonMappingException e) {
-            JsonNode jsonNode = mapper.readTree(responseStr);
+            String responseStr = request.execute();
 
-            if (jsonNode.has("success") && jsonNode.get("success").intValue() == 0) {
-                throw new UnsuccessException(
-                        jsonNode.get("success").intValue(),
-                        jsonNode.get("error").toString()
-                );
-            } else {
-                throw new RuntimeException(e);
+            ObjectMapper mapper = new ObjectMapper();
+
+            try {
+                return mapper.readValue(responseStr, Info.class);
+            } catch (JsonMappingException e) {
+                JsonNode jsonNode = mapper.readTree(responseStr);
+
+                if (jsonNode.has("success") && jsonNode.get("success").intValue() == 0) {
+                    throw new UnsuccessException(
+                            jsonNode.get("success").intValue(),
+                            jsonNode.get("error").toString()
+                    );
+                } else {
+                    throw new RuntimeException(e);
+                }
             }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    public TickerExecutor getTicker(String pair) throws IOException {
+    public TickerExecutor getTicker(String pair) {
         this.request
                 .append("ticker")
                 .append(pair);
@@ -68,7 +60,7 @@ public class PublicApi {
         return new TickerExecutor();
     }
 
-    public TickerExecutor getTicker(List<String> pairs) throws IOException {
+    public TickerExecutor getTicker(List<String> pairs) {
         this.request
                 .append("ticker")
                 .append(String.join("-", pairs));
@@ -76,7 +68,7 @@ public class PublicApi {
         return new TickerExecutor();
     }
 
-    public DepthExecutor getDepth(String pair) throws IOException {
+    public DepthExecutor getDepth(String pair) {
         this.request
                 .append("depth")
                 .append(pair);
@@ -84,7 +76,7 @@ public class PublicApi {
         return new DepthExecutor();
     }
 
-    public DepthExecutor getDepth(List<String> pairs) throws IOException {
+    public DepthExecutor getDepth(List<String> pairs) {
         this.request
                 .append("depth")
                 .append(String.join("-", pairs));
@@ -92,7 +84,7 @@ public class PublicApi {
         return new DepthExecutor();
     }
 
-    public TradeExecutor getTrade(String pair) throws IOException {
+    public TradeExecutor getTrade(String pair) {
         this.request
                 .append("trades")
                 .append(pair);
@@ -100,7 +92,7 @@ public class PublicApi {
         return new TradeExecutor();
     }
 
-    public TradeExecutor getTrade(List<String> pairs) throws IOException {
+    public TradeExecutor getTrade(List<String> pairs) {
         this.request
                 .append("trades")
                 .append(String.join("-", pairs));
@@ -121,34 +113,38 @@ public class PublicApi {
         }
 
         @Override
-        public Map<String, Ticker> execute() throws IOException {
+        public Map<String, Ticker> execute() {
             Map<String, Ticker> result = new HashMap<>();
 
-            String responseStr = request.execute();
-
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode responseJson = mapper.readTree(responseStr);
-
             try {
-                for (Iterator<String> it = responseJson.fieldNames(); it.hasNext(); ) {
-                    String pairName = it.next();
-                    Ticker ticker = mapper.readValue(responseJson.get(pairName).toString(), Ticker.class);
+                String responseStr = request.execute();
 
-                    result.put(pairName, ticker);
+                ObjectMapper mapper = new ObjectMapper();
+                JsonNode responseJson = mapper.readTree(responseStr);
+
+                try {
+                    for (Iterator<String> it = responseJson.fieldNames(); it.hasNext(); ) {
+                        String pairName = it.next();
+                        Ticker ticker = mapper.readValue(responseJson.get(pairName).toString(), Ticker.class);
+
+                        result.put(pairName, ticker);
+                    }
+
+                    return result;
+                } catch (JsonMappingException e) {
+                    JsonNode jsonNode = mapper.readTree(responseStr);
+
+                    if (jsonNode.has("success") && jsonNode.get("success").intValue() == 0) {
+                        throw new UnsuccessException(
+                                jsonNode.get("success").intValue(),
+                                jsonNode.get("error").toString()
+                        );
+                    } else {
+                        throw new RuntimeException(e);
+                    }
                 }
-
-                return result;
-            } catch (JsonMappingException e) {
-                JsonNode jsonNode = mapper.readTree(responseStr);
-
-                if (jsonNode.has("success") && jsonNode.get("success").intValue() == 0) {
-                    throw new UnsuccessException(
-                            jsonNode.get("success").intValue(),
-                            jsonNode.get("error").toString()
-                    );
-                } else {
-                    throw new RuntimeException(e);
-                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         }
     }
@@ -168,34 +164,39 @@ public class PublicApi {
         }
 
         @Override
-        public Map<String, Depth> execute() throws IOException {
+        public Map<String, Depth> execute() {
             Map<String, Depth> result = new HashMap<>();
 
-            String responseStr = request.execute();
-
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode responseJson = mapper.readTree(responseStr);
-
             try {
-                for (Iterator<String> it = responseJson.fieldNames(); it.hasNext(); ) {
-                    String pairName = it.next();
-                    Depth depth = mapper.readValue(responseJson.get(pairName).toString(), Depth.class);
 
-                    result.put(pairName, depth);
+                String responseStr = request.execute();
+
+                ObjectMapper mapper = new ObjectMapper();
+                JsonNode responseJson = mapper.readTree(responseStr);
+
+                try {
+                    for (Iterator<String> it = responseJson.fieldNames(); it.hasNext(); ) {
+                        String pairName = it.next();
+                        Depth depth = mapper.readValue(responseJson.get(pairName).toString(), Depth.class);
+
+                        result.put(pairName, depth);
+                    }
+
+                    return result;
+                } catch (JsonMappingException e) {
+                    JsonNode jsonNode = mapper.readTree(responseStr);
+
+                    if (jsonNode.has("success") && jsonNode.get("success").intValue() == 0) {
+                        throw new UnsuccessException(
+                                jsonNode.get("success").intValue(),
+                                jsonNode.get("error").toString()
+                        );
+                    } else {
+                        throw new RuntimeException(e);
+                    }
                 }
-
-                return result;
-            } catch (JsonMappingException e) {
-                JsonNode jsonNode = mapper.readTree(responseStr);
-
-                if (jsonNode.has("success") && jsonNode.get("success").intValue() == 0) {
-                    throw new UnsuccessException(
-                            jsonNode.get("success").intValue(),
-                            jsonNode.get("error").toString()
-                    );
-                } else {
-                    throw new RuntimeException(e);
-                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         }
     }
@@ -215,45 +216,49 @@ public class PublicApi {
         }
 
         @Override
-        public Map<String, List<Trade>> execute() throws IOException {
+        public Map<String, List<Trade>> execute() {
             Map<String, List<Trade>> result = new HashMap<>();
 
-            String responseStr = request.execute();
-
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode responseJson = mapper.readTree(responseStr);
-
             try {
-                for (Iterator<String> it = responseJson.fieldNames(); it.hasNext(); ) {
-                    String pairName = it.next();
+                String responseStr = request.execute();
 
-                    JsonNode tradeListJson = responseJson.get(pairName);
+                ObjectMapper mapper = new ObjectMapper();
+                JsonNode responseJson = mapper.readTree(responseStr);
 
-                    List<Trade> tradeList = new ArrayList<>();
+                try {
+                    for (Iterator<String> it = responseJson.fieldNames(); it.hasNext(); ) {
+                        String pairName = it.next();
 
-                    if (tradeListJson.isArray()) {
-                        for (JsonNode tradeJson : tradeListJson) {
-                            Trade trade = mapper.readValue(tradeJson.toString(), Trade.class);
+                        JsonNode tradeListJson = responseJson.get(pairName);
 
-                            tradeList.add(trade);
+                        List<Trade> tradeList = new ArrayList<>();
+
+                        if (tradeListJson.isArray()) {
+                            for (JsonNode tradeJson : tradeListJson) {
+                                Trade trade = mapper.readValue(tradeJson.toString(), Trade.class);
+
+                                tradeList.add(trade);
+                            }
                         }
+
+                        result.put(pairName, tradeList);
                     }
 
-                    result.put(pairName, tradeList);
-                }
+                    return result;
+                } catch (JsonMappingException e) {
+                    JsonNode jsonNode = mapper.readTree(responseStr);
 
-                return result;
-            } catch (JsonMappingException e) {
-                JsonNode jsonNode = mapper.readTree(responseStr);
-
-                if (jsonNode.has("success") && jsonNode.get("success").intValue() == 0) {
-                    throw new UnsuccessException(
-                            jsonNode.get("success").intValue(),
-                            jsonNode.get("error").toString()
-                    );
-                } else {
-                    throw new RuntimeException(e);
+                    if (jsonNode.has("success") && jsonNode.get("success").intValue() == 0) {
+                        throw new UnsuccessException(
+                                jsonNode.get("success").intValue(),
+                                jsonNode.get("error").toString()
+                        );
+                    } else {
+                        throw new RuntimeException(e);
+                    }
                 }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         }
     }

@@ -30,26 +30,26 @@ public class WexClient implements Closeable {
     }
 
     public WexClient(String url, String key, String secret) {
-        this.httpClient = HttpClients.createDefault();
-        this.url = url;
+        this(url);
         this.key = key;
         this.secret = secret;
     }
 
     public WexClient(String url, String key, String secret, int nonce) {
-        this.httpClient = HttpClients.createDefault();
-        this.url = url;
+        this(url);
         this.key = key;
         this.secret = secret;
         this.nonce = nonce;
     }
 
-    public PublicApi publicApi() {
-        return new PublicApi(new GetRequest(this));
+    public boolean check() throws IOException {
+        String responseStr = new GetRequest(this).execute();
+
+        return responseStr != null && responseStr.length() > 0;
     }
 
-    public PublicApi publicApi(int version) {
-        return new PublicApi(new GetRequest(this), version);
+    public PublicApi publicApi() {
+        return new PublicApi(new GetRequest(this));
     }
 
     public TradeApi tradeApi() {

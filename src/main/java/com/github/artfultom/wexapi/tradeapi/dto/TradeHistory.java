@@ -3,6 +3,7 @@ package com.github.artfultom.wexapi.tradeapi.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.github.artfultom.wexapi.util.BooleanDeserializer;
 import com.github.artfultom.wexapi.util.DateDeserializer;
 import com.github.artfultom.wexapi.util.TradeType;
 
@@ -87,7 +88,8 @@ public class TradeHistory implements Serializable {
          * Is equal to 1 if order_id is your order, otherwise is equal to 0.
          */
         @JsonProperty("is_your_order")
-        private int isYourOrder;    // TODO
+        @JsonDeserialize(using = BooleanDeserializer.class)
+        private boolean isYourOrder;
 
         /**
          * Trade execution time.
@@ -139,11 +141,11 @@ public class TradeHistory implements Serializable {
             this.orderId = orderId;
         }
 
-        public int getIsYourOrder() {
+        public boolean getIsYourOrder() {
             return isYourOrder;
         }
 
-        public void setIsYourOrder(int isYourOrder) {
+        public void setIsYourOrder(boolean isYourOrder) {
             this.isYourOrder = isYourOrder;
         }
 

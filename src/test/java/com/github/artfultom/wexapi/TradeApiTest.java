@@ -114,8 +114,8 @@ public class TradeApiTest {
 
         LocalDateTime dateTime = LocalDateTime.ofInstant(
                 Instant.ofEpochMilli(1518789451L * 1000),
-                ZoneId.systemDefault()
-        ); // TODO zoneId
+                ZoneId.of("GMT+3")
+        );
         Assert.assertEquals(info.getReturnValue().getServerTime(), dateTime);
     }
 }

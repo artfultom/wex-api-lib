@@ -71,7 +71,7 @@ public class PushApi {
 
                 consumer.accept(pushDepth);
             } catch (IOException e) {
-                e.printStackTrace();    // TODO
+                throw new RuntimeException(e);
             }
         });
 
@@ -98,7 +98,7 @@ public class PushApi {
 
                 consumer.accept(result);
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         });
 

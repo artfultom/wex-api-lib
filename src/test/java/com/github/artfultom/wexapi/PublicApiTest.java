@@ -53,8 +53,7 @@ public class PublicApiTest {
     @Test
     public void getInfo() throws Exception {
         List<String> answers = Arrays.asList(
-                "https://wex.nz/api/3/info",
-                "https://wex.nz/api/99/info"
+                "https://wex.nz/api/3/info"
         );
 
         HttpGet httpGet = Mockito.mock(HttpGet.class);
@@ -100,7 +99,7 @@ public class PublicApiTest {
 
         Info info1 = new WexClient(BASE_URL).publicApi().getInfo();
 
-        Assert.assertTrue(info1.getServerTime() > 0);
+        Assert.assertNotNull(info1.getServerTime());
         Assert.assertFalse(info1.getPairs().isEmpty());
 
         Info.Pair pair1 = info1.getPairs().get("btc_usd");
@@ -111,8 +110,6 @@ public class PublicApiTest {
         Assert.assertEquals(pair1.getMinAmount(), BigDecimal.valueOf(0.01));
         Assert.assertEquals(pair1.getHidden(), 0);
         Assert.assertEquals(pair1.getFee(), BigDecimal.valueOf(0.2));
-
-        new WexClient(BASE_URL).publicApi(99).getInfo();
     }
 
     @Test
