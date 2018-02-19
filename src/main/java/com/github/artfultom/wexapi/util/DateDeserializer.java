@@ -23,6 +23,6 @@ public class DateDeserializer extends StdDeserializer<LocalDateTime> {
     public LocalDateTime deserialize(JsonParser jsonparser, DeserializationContext context) throws IOException {
         Long dateTime = jsonparser.getLongValue();
 
-        return LocalDateTime.ofInstant(Instant.ofEpochMilli(dateTime * 1000), ZoneId.systemDefault()); // TODO zoneid
+        return LocalDateTime.ofInstant(Instant.ofEpochMilli(dateTime * 1000), ZoneId.of("GMT+3"));
     }
 }
