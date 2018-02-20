@@ -1,13 +1,13 @@
 package com.github.artfultom.wexapi.pushapi.dto;
 
-import com.github.artfultom.wexapi.util.TradeType;
+import com.github.artfultom.wexapi.util.PushTradeType;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 
 public class PushTrade implements Serializable {
 
-    private TradeType tradeType;
+    private PushTradeType pushTradeType;
 
     private BigDecimal rate;
 
@@ -16,18 +16,18 @@ public class PushTrade implements Serializable {
     public PushTrade() {
     }
 
-    public PushTrade(TradeType tradeType, BigDecimal rate, BigDecimal amount) {
-        this.tradeType = tradeType;
+    public PushTrade(PushTradeType pushTradeType, BigDecimal rate, BigDecimal amount) {
+        this.pushTradeType = pushTradeType;
         this.rate = rate;
         this.amount = amount;
     }
 
-    public TradeType getTradeType() {
-        return tradeType;
+    public PushTradeType getPushTradeType() {
+        return pushTradeType;
     }
 
-    public void setTradeType(TradeType tradeType) {
-        this.tradeType = tradeType;
+    public void setPushTradeType(PushTradeType pushTradeType) {
+        this.pushTradeType = pushTradeType;
     }
 
     public BigDecimal getRate() {

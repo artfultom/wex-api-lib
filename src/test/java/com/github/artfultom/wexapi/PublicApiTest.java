@@ -5,6 +5,7 @@ import com.github.artfultom.wexapi.publicapi.dto.Info;
 import com.github.artfultom.wexapi.publicapi.dto.Ticker;
 import com.github.artfultom.wexapi.publicapi.dto.Trade;
 import com.github.artfultom.wexapi.request.GetRequest;
+import com.github.artfultom.wexapi.util.TradeType;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -337,13 +338,13 @@ public class PublicApiTest {
         List<Trade> trades = tradeMap.get("btc_usd");
 
         Assert.assertEquals(trades.size(), 2);
-        Assert.assertEquals(trades.get(0).getType(), "ask");
+        Assert.assertEquals(trades.get(0).getTradeType(), TradeType.ASK);
         Assert.assertEquals(trades.get(0).getPrice(), BigDecimal.valueOf(103.6));
         Assert.assertEquals(trades.get(0).getAmount(), BigDecimal.valueOf(0.101));
         Assert.assertEquals(trades.get(0).getTid(), 4861261);
         Assert.assertEquals(trades.get(0).getTimestamp(), 1370818007);
 
-        Assert.assertEquals(trades.get(1).getType(), "bid");
+        Assert.assertEquals(trades.get(1).getTradeType(), TradeType.BID);
         Assert.assertEquals(trades.get(1).getPrice(), BigDecimal.valueOf(103.989));
         Assert.assertEquals(trades.get(1).getAmount(), BigDecimal.valueOf(1.51414));
         Assert.assertEquals(trades.get(1).getTid(), 4861254);

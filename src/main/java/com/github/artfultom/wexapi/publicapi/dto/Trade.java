@@ -2,6 +2,7 @@ package com.github.artfultom.wexapi.publicapi.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.github.artfultom.wexapi.util.TradeType;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -10,7 +11,7 @@ import java.math.BigDecimal;
 public class Trade implements Serializable {
 
     @JsonProperty("type")
-    private String type;
+    private TradeType tradeType;
 
     @JsonProperty("price")
     private BigDecimal price;
@@ -27,12 +28,12 @@ public class Trade implements Serializable {
     public Trade() {
     }
 
-    public String getType() {
-        return type;
+    public TradeType getTradeType() {
+        return tradeType;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setTradeType(TradeType tradeType) {
+        this.tradeType = tradeType;
     }
 
     public BigDecimal getPrice() {

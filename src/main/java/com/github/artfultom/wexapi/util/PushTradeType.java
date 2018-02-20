@@ -2,11 +2,11 @@ package com.github.artfultom.wexapi.util;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public enum TradeType {
+public enum PushTradeType {
 
-    @JsonProperty("ask")
-    ASK,
+    @JsonProperty("buy")
+    BUY,
 
-    @JsonProperty("bid")
-    BID;
+    @JsonProperty("sell")
+    SELL;
 }

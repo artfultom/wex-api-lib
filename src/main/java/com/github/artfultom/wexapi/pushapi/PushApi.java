@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.artfultom.wexapi.pushapi.dto.PushDepth;
 import com.github.artfultom.wexapi.pushapi.dto.PushTrade;
-import com.github.artfultom.wexapi.util.TradeType;
+import com.github.artfultom.wexapi.util.PushTradeType;
 import com.pusher.client.Pusher;
 import com.pusher.client.PusherOptions;
 import com.pusher.client.channel.Channel;
@@ -91,7 +91,7 @@ public class PushApi {
 
                 jsonNode.forEach(trade ->
                         result.add(new PushTrade(
-                                TradeType.valueOf(trade.get(0).asText().toUpperCase()),
+                                PushTradeType.valueOf(trade.get(0).asText().toUpperCase()),
                                 new BigDecimal(trade.get(1).asText()),
                                 new BigDecimal(trade.get(2).asText())
                         )));

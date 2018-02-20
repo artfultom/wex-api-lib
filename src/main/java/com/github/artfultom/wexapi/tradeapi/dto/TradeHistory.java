@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.github.artfultom.wexapi.util.BooleanDeserializer;
 import com.github.artfultom.wexapi.util.DateDeserializer;
-import com.github.artfultom.wexapi.util.TradeType;
+import com.github.artfultom.wexapi.util.PushTradeType;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -64,7 +64,7 @@ public class TradeHistory implements Serializable {
          * Trade type, buy/sell.
          */
         @JsonProperty("type")
-        private TradeType tradeType;
+        private PushTradeType pushTradeType;
 
         /**
          * The amount of currency was bought/sold.
@@ -109,12 +109,12 @@ public class TradeHistory implements Serializable {
             this.pair = pair;
         }
 
-        public TradeType getTradeType() {
-            return tradeType;
+        public PushTradeType getPushTradeType() {
+            return pushTradeType;
         }
 
-        public void setTradeType(TradeType tradeType) {
-            this.tradeType = tradeType;
+        public void setPushTradeType(PushTradeType pushTradeType) {
+            this.pushTradeType = pushTradeType;
         }
 
         public BigDecimal getAmount() {
