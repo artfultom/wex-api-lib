@@ -13,32 +13,32 @@ Repository - http://repo1.maven.org/maven2/com/github/artfultom/wexapi/.
 <dependency>
     <groupId>com.github.artfultom</groupId>
     <artifactId>wexapi</artifactId>
-    <version>2.0.0-SNAPSHOT</version>
+    <version>2.0.0-RELEASE</version>
 </dependency>
 ```
 ### Apache Buildr
 ```
-'com.github.artfultom:wexapi:jar:2.0.0-SNAPSHOT'
+'com.github.artfultom:wexapi:jar:2.0.0-RELEASE'
 ```
 ### Apache Ivy
 ```
-<dependency org="com.github.artfultom" name="wexapi" rev="2.0.0-SNAPSHOT" />
+<dependency org="com.github.artfultom" name="wexapi" rev="2.0.0-RELEASE" />
 ```
 ### Groovy Grape
 ```
 @Grapes( 
-    @Grab(group='com.github.artfultom', module='wexapi', version='2.0.0-SNAPSHOT') 
+    @Grab(group='com.github.artfultom', module='wexapi', version='2.0.0-RELEASE') 
 )
 ```
 ### Gradle/Grails
 ```
-compile 'com.github.artfultom:wexapi:2.0.0-SNAPSHOT'
+compile 'com.github.artfultom:wexapi:2.0.0-RELEASE'
 ```
 ### Scala SBT
 ```
-libraryDependencies += "com.github.artfultom" % "wexapi" % "2.0.0-SNAPSHOT"
+libraryDependencies += "com.github.artfultom" % "wexapi" % "2.0.0-RELEASE"
 ```
 ### Leiningen
 ```
-[com.github.artfultom/wexapi "2.0.0-SNAPSHOT"]
+[com.github.artfultom/wexapi "2.0.0-RELEASE"]
 ```
